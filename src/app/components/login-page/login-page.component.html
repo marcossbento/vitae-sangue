@@ -1,1 +1,20 @@
-<p>login-page works!</p>
+<section class="login-page">
+        <div class="left-container">
+            <h1>Sua nova solução de relatórios chegou!</h1>
+        </div>
+        <div class="right-container">
+            <img src="../../../assets/images/VitaeSangueLogo.png" alt="">
+            <h2>Boas-vindas à VitaeSangue!</h2>
+            <form action="">
+                <p-floatLabel>
+                    <input pInputText id="email" [(ngModel)]="email" />
+                    <label for="email">E-mail</label>
+                </p-floatLabel>
+                <p-floatLabel>
+                    <input pInputText id="senha" [(ngModel)]="senha" />
+                    <label for="senha">Senha</label>
+                </p-floatLabel>  
+                <button type="button" label="Entrar" placeholder="Entrar">Entrar</button>
+            </form>  
+        </div>
+</section>
