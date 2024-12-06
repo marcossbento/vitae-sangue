@@ -3,18 +3,26 @@
             <h1>Sua nova solução de relatórios chegou!</h1>
         </div>
         <div class="right-container">
-            <img src="../../../assets/images/VitaeSangueLogo.png" alt="">
-            <h2>Boas-vindas à VitaeSangue!</h2>
+            <img src="../../../assets/images/VitaeSLogoVert.png" alt="">
+            <h2>Seja bem-vindo!</h2>
+            <p>Insira seus dados abaixo ou crie uma conta</p>
             <form action="">
                 <p-floatLabel>
-                    <input pInputText id="email" [(ngModel)]="email" />
+                    <input pInputText id="email" name="email" type="email" [(ngModel)]="email" required/>
                     <label for="email">E-mail</label>
                 </p-floatLabel>
                 <p-floatLabel>
-                    <input pInputText id="senha" [(ngModel)]="senha" />
+                    <p-password [(ngModel)]="senha" 
+                                [toggleMask]="true" 
+                                [feedback]="false"
+                                name="senha"
+                                styleClass="p-password p-component p-inputwrapper p-input-icon-right" />
                     <label for="senha">Senha</label>
-                </p-floatLabel>  
-                <button type="button" label="Entrar" placeholder="Entrar">Entrar</button>
+                    <a href="">Esqueceu sua senha?</a>
+                </p-floatLabel> 
+                <button type="submit" label="Entrar" placeholder="Entrar">Entrar</button>
+                <p>ou</p>
+                <button type="button" label="CriarConta" placeholder="Criar contaa">Crie uma conta</button>
             </form>  
         </div>
 </section>
