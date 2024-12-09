@@ -21,7 +21,7 @@
         align-items: center;
 
         h1 {
-            font-size: 4rem;
+            font-size: clamp(2rem, 5vw, 4rem);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
         }
     }
@@ -35,15 +35,17 @@
         align-items: center;
 
         img {
-            width: 40%;
+            width: 35%;
             margin-bottom: 20px;
         }
 
         h2 {
             margin: 0;
+            font-size: clamp(1rem, 2.5vw, 2rem);
         }
 
         p {
+            font-size: clamp(.8rem, 2.5vw, .9rem);
             color: #620000cb;
         }
 
@@ -99,7 +101,8 @@
                             border-radius: 8px;
                         }
 
-                        eyeicon, eyeslashicon {
+                        eyeicon,
+                        eyeslashicon {
                             height: 100%;
                             right: 10px;
                             position: absolute;
@@ -127,21 +130,44 @@
             }
         }
     }
+}
 
-    @media (max-width: 768px) {
-        flex-direction: row;
-        justify-content: space-between;
+@media (max-width: 768px) {
+    ::ng-deep .login-page {
+        flex-direction: column;
+        height: auto;
+
+        .left-container,
+        .right-container {
+            width: 100%;
+        }
 
         .left-container {
-            margin-bottom: 0;
-
-            h1 {
-                font-size: 2rem;
-            }
+            height: 50vh;
         }
 
         .right-container {
-            max-width: 50%;
+            form {
+                width: 50%;
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    ::ng-deep .login-page {
+        .left-container {
+            height: 40vh;
+        }
+
+        .right-container {
+            img {
+                width: 70%;
+            }
+
+            form {
+                width: 90%;
+            }
         }
     }
 }
