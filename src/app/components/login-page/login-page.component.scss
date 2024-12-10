@@ -1,10 +1,15 @@
 @import '../../../variables.scss';
 
+$fs-400: 1rem;
+$fs-500: 1.25rem;
+$fs-600: 1.5rem;
+$fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
+
 ::ng-deep .login-page {
     background-color: $off-white;
     display: flex;
     align-items: center;
-    height: 95vh;
+    height: 100vh;
 
     .left-container {
         height: 100%;
@@ -21,7 +26,7 @@
         align-items: center;
 
         h1 {
-            font-size: clamp(2rem, 5vw, 4rem);
+            font-size: $fs-xl;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
         }
     }
@@ -41,7 +46,7 @@
 
         h2 {
             margin: 0;
-            font-size: clamp(1rem, 2.5vw, 2rem);
+            font-size: clamp(1rem, 2.5vw + 1rem, 2rem);
         }
 
         p {
@@ -53,7 +58,7 @@
             width: 40%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: center;  
             align-items: center;
 
             p-floatLabel {
@@ -135,7 +140,6 @@
 @media (max-width: 768px) {
     ::ng-deep .login-page {
         flex-direction: column;
-        height: auto;
 
         .left-container,
         .right-container {
