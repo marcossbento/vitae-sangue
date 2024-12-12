@@ -1,1 +1,12 @@
-<p>header works!</p>
+<header>
+    <div class="logo-img">
+        <img src="../../../assets/images/VitaeSLogoHorizontalWhite.png" alt="logo">
+    </div>
+    <div class="profile-area">
+        <p-avatar [label]="user.nameFirstLetter" size="large" shape="circle" />
+        <div class="profile-area-text">
+            <h2>{{ user.name }}</h2>
+            <p>{{ user.position }}</p>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,70 @@
+@import '../../../variables.scss';
+
+$fs-200: .5rem;
+$fs-300: .75rem;
+$fs-400: 1rem;
+$fs-500: 1.25rem;
+$fs-600: 1.5rem;
+$fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
+
+::ng-deep header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 12vh;
+    padding: 1vh 2vh;
+    position: sticky;
+    background-color: $primary-color;
+
+    .logo-img {
+        max-height: 100%;
+        width: 16%;
+        min-width: 144px;
+        display: flex;
+        justify-content: center;
+
+        img {
+            max-width: 100%;
+            display: block;
+            height: auto;
+        }
+    }
+
+    .profile-area {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        transition: all .3s ease;
+        padding: 0 8px;
+
+        &:hover {
+            background-color: $secondary-color;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        p-avatar {
+            height: min-content;
+            margin-right: 5%;
+
+            .p-avatar-circle {
+                background-color: $off-white;
+            }
+        }
+
+        .profile-area-text {
+            color: $off-white;
+
+            h2{
+                font-size: $fs-400;
+                margin: 0;
+            }
+
+            p {
+                font-size: $fs-300;
+                margin: 0;
+            }
+        }
+    }
+}

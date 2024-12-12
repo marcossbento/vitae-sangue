@@ -40,7 +40,8 @@ $fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
         align-items: center;
 
         img {
-            width: 35%;
+            width: 40%;
+            min-width: 300px;
             margin-bottom: 20px;
         }
 
