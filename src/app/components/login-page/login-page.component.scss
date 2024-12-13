@@ -40,9 +40,14 @@ $fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
         align-items: center;
 
         img {
-            width: 40%;
-            min-width: 300px;
-            margin-bottom: 20px;
+            width: 20%;
+            min-width: 15%;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 2.5vw + 1rem, 3rem);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
         }
 
         h2 {
@@ -79,6 +84,7 @@ $fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
 
                 label {
                     font-size: 0.875rem;
+                    font-weight: 500;
                     color: $primary-color;
                 }
 

@@ -3,21 +3,22 @@
             <h1>Sua nova solução de relatórios chegou!</h1>
         </div>
         <div class="right-container">
-            <img src="../../../assets/images/VitaeSLogoVert.png" alt="">
+            <img src="../../../assets/images/iconizer-VitaeSangueLogo.svg" alt="">
+            <h1>VitaeSangue</h1>
             <h2>Seja bem-vindo!</h2>
             <p>Insira seus dados abaixo ou crie uma conta</p>
             <form action="">
                 <p-floatLabel>
-                    <input pInputText id="email" name="email" type="email" [(ngModel)]="email" required/>
                     <label for="email">E-mail</label>
+                    <input pInputText id="email" name="email" type="email" [(ngModel)]="email" required/>
                 </p-floatLabel>
                 <p-floatLabel>
+                    <label for="senha">Senha</label>
                     <p-password [(ngModel)]="senha" 
                                 [toggleMask]="true" 
                                 [feedback]="false"
                                 name="senha"
                                 styleClass="p-password p-component p-inputwrapper p-input-icon-right" />
-                    <label for="senha">Senha</label>
                     <a href="">Esqueceu sua senha?</a>
                 </p-floatLabel> 
                 <button type="submit" label="Entrar" placeholder="Entrar">Entrar</button>
