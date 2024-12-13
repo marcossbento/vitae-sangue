@@ -16,9 +16,9 @@ user: any;
 
 constructor () {
   this.user = {
-    name: 'John Doe',
-    nameFirstLetter: 'J',
-    position: 'Software Engineer',
+    name: 'Usuário',
+    nameFirstLetter: 'U',
+    position: 'Estagiário',
   }
 
 }
