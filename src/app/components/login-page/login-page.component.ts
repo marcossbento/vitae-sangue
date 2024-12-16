@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,8 @@ import { DividerModule } from 'primeng/divider';
     CommonModule,
     FormsModule,
     PasswordModule,
-    DividerModule
+    DividerModule,
+    RouterModule
   ],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']

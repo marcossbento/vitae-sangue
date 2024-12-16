@@ -1,0 +1,113 @@
+<section class="register-page">
+    <div class="register-container">
+      <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
+      <h1>Boas-vindas à <span>VitaeSangue!</span></h1>
+      <h2>Formulário de Registro</h2>
+      
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="p-field">
+            <label for="nome">Nome</label>
+            <input pInputText id="nome" formControlName="nome"/>
+            <small class="p-error" *ngIf="registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched">
+              Nome é obrigatório e deve ter no mínimo 3 caracteres
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="cep">CEP</label>
+            <input pInputText id="cep" formControlName="cep" mask="00000-000"/>
+            <small class="p-error" *ngIf="registerForm.get('cep')?.invalid && registerForm.get('cep')?.touched">
+              CEP inválido. Use o formato: 00000-000
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="cidade">Cidade</label>
+            <input pInputText id="cidade" formControlName="cidade"/>
+            <small class="p-error" *ngIf="registerForm.get('cidade')?.invalid && registerForm.get('cidade')?.touched">
+              Cidade é obrigatória
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="diretor">Diretor responsável</label>
+            <input pInputText id="diretor" formControlName="diretor"/>
+            <small class="p-error" *ngIf="registerForm.get('diretor')?.invalid && registerForm.get('diretor')?.touched">
+              Nome do diretor é obrigatório
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="email">E-mail</label>
+            <input pInputText id="email" formControlName="email" type="email"/>
+            <small class="p-error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+              E-mail inválido
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="logradouro">Logradouro</label>
+            <input pInputText id="logradouro" formControlName="logradouro"/>
+            <small class="p-error" *ngIf="registerForm.get('logradouro')?.invalid && registerForm.get('logradouro')?.touched">
+              Logradouro é obrigatório
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="estado">Estado</label>
+            <input pInputText id="estado" formControlName="estado"/>
+            <small class="p-error" *ngIf="registerForm.get('estado')?.invalid && registerForm.get('estado')?.touched">
+              Estado é obrigatório (ex: SP)
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="tipoEstabelecimento">Tipo de Estabelecimento</label>
+            <input pInputText id="tipoEstabelecimento" formControlName="tipoEstabelecimento"/>
+            <small class="p-error" *ngIf="registerForm.get('tipoEstabelecimento')?.invalid && registerForm.get('tipoEstabelecimento')?.touched">
+              Tipo de estabelecimento é obrigatório
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="numero">Número</label>
+            <input pInputText id="numero" formControlName="numero"/>
+            <small class="p-error" *ngIf="registerForm.get('numero')?.invalid && registerForm.get('numero')?.touched">
+              Número é obrigatório
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="cnes">CNES</label>
+            <input pInputText id="cnes" formControlName="cnes"/>
+            <small class="p-error" *ngIf="registerForm.get('cnes')?.invalid && registerForm.get('cnes')?.touched">
+              CNES deve conter exatamente 7 dígitos
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="telefone">Telefone</label>
+            <input pInputText id="telefone" formControlName="telefone" mask="(00) 00000-0000"/>
+            <small class="p-error" *ngIf="registerForm.get('telefone')?.invalid && registerForm.get('telefone')?.touched">
+              Telefone inválido. Use o formato: (00) 00000-0000
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="bairro">Bairro</label>
+            <input pInputText id="bairro" formControlName="bairro"/>
+            <small class="p-error" *ngIf="registerForm.get('bairro')?.invalid && registerForm.get('bairro')?.touched">
+              Bairro é obrigatório
+            </small>
+          </div>
+        </div>
+  
+        <div class="button-container">
+          <button pButton type="submit" label="Registre-se" [disabled]="!registerForm.valid">Registre-se</button>
+          <button pButton type="button" label="Voltar" routerLink="/login">Voltar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  
