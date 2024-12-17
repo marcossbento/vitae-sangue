@@ -1,6 +1,6 @@
 @import '../../../variables.scss';
 
-.register-page {
+::ng-deep .register-page {
     background-color: $off-white;
     min-height: 100vh;
     display: flex;
@@ -13,7 +13,7 @@
         border-radius: 8px;
         padding: 2rem;
         width: 100%;
-        max-width: 800px;
+        max-width: 1100px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
         img {
@@ -36,7 +36,7 @@
         h2 {
             text-align: center;
             color: $primary-color;
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin-bottom: 2rem;
         }
 
@@ -47,8 +47,8 @@
 
             .form-grid {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
 
                 .p-field {
                     display: flex;
@@ -62,8 +62,13 @@
                         font-weight: 500;
                     }
 
+                    p-inputnumber, .p-inputnumber, p-inputmask, .p-inputmask {
+                        display: flex;
+                        width: 100%;
+                    }
+
                     input {
-                        width: 70%;
+                        display: flex;
                         padding: 0.5rem;
                         border: 1px solid #ccc;
                         border-radius: 4px;
@@ -81,8 +86,13 @@
                 }
             }
 
+            .button-container {
+                display: flex;
+                justify-content: space-around;
+            }
+
             button[type="submit"] {
-                width: 100%;
+                width: 40%;
                 padding: 0.75rem;
                 background-color: $primary-color;
                 color: white;
@@ -100,6 +110,24 @@
                 &:disabled {
                     opacity: 0.7;
                     cursor: not-allowed;
+                }
+            }
+
+            button[type="button"] {
+                width: 40%;
+                padding: 0.75rem;
+                background-color: $off-white;
+                color: $primary-color;
+                border: 1px solid $primary-color;
+                border-radius: 4px;
+                font-size: 1rem;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: darken($primary-color, 10%);
+                    color: $off-white;
                 }
             }
         }

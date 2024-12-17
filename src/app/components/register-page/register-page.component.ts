@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputMaskModule } from 'primeng/inputmask';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-register-page',
@@ -16,12 +18,21 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     RouterModule,
     InputTextModule,
     FloatLabelModule,
+    InputNumberModule,
+    FormsModule,
+    InputMaskModule,
+    DropdownModule,
   ],
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.scss']
 })
 export class RegisterPageComponent {
   registerForm!: FormGroup;
+  tipoEstabelecimento: any[] = [
+    { label: 'Público', value: 'Público' },
+    { label: 'Particular', value: 'Particular' },
+    { label: 'Filantrópico', value: 'Filantrópico' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +48,7 @@ export class RegisterPageComponent {
       cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
       logradouro: ['', Validators.required],
       numero: ['', Validators.required],
-      bairro: ['', Validators.required],
+      bairro: ['', Validators.required, Validators.minLength(3)],
       cidade: ['', Validators.required],
       estado: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
