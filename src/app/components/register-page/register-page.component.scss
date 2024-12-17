@@ -55,6 +55,36 @@
                     flex-direction: column;
                     margin-bottom: 1rem;
 
+                    .p-dropdown {
+                        width: 100%;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        
+                        .p-dropdown-label {
+                          padding: 0.5rem;
+                        }
+                        
+                        .p-dropdown-trigger {
+                          padding: 0 0.5rem;
+                        }
+                      }
+                      
+                      .p-dropdown-panel {
+                        .p-dropdown-items {
+                          padding: 0.5rem;
+                          background-color: $primary-color;
+                          color: $off-white;
+                          border-radius: 0 0 8px 8px;
+
+                          li {
+
+                            &:hover {
+                              background-color: $secondary-color;
+                            }
+                          }
+                        }
+                      }
+
                     label {
                         display: block;
                         margin-bottom: 0.5rem;
