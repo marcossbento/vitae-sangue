@@ -29,9 +29,9 @@ import { DropdownModule } from 'primeng/dropdown';
 export class RegisterPageComponent {
   registerForm!: FormGroup;
   tipoEstabelecimento: any[] = [
-    { label: 'Público', value: 'Público' },
+    { label: 'Público', value: 'Publico' },
     { label: 'Particular', value: 'Particular' },
-    { label: 'Filantrópico', value: 'Filantrópico' }
+    { label: 'Filantrópico', value: 'Filantropico' }
   ];
 
   constructor(
@@ -48,13 +48,16 @@ export class RegisterPageComponent {
       cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
       logradouro: ['', Validators.required],
       numero: ['', Validators.required],
-      bairro: ['', Validators.required, Validators.minLength(3)],
+      bairro: ['', [Validators.required, Validators.minLength(3)]],
       cidade: ['', Validators.required],
       estado: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
       tipoEstabelecimento: ['', Validators.required],
       diretor: ['', Validators.required],
-      cnes: ['', [Validators.required, Validators.pattern(/^\d{7}$/)]]
+      cnes: ['', [Validators.required, 
+        Validators.pattern(/^\d{7}$/),
+        Validators.minLength(7),
+        Validators.maxLength(7)]]
     });
   }
 

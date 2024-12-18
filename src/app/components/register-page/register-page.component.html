@@ -3,6 +3,7 @@
     <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
     <h1>Boas-vindas à <span>VitaeSangue!</span></h1>
     <h2>Formulário de Registro</h2>
+    <h3>Insira as informações requeridas abaixo</h3>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
@@ -16,9 +17,9 @@
 
         <div class="p-field">
           <label for="cep">CEP</label>
-          <p-inputMask mask="99999-999" formControlName="cep" placeholder="00000-000" />
+          <p-inputMask mask="99999-999" formControlName="cep" placeholder="00000-000" [autoClear]="false"/>
           <small class="p-error" *ngIf="registerForm.get('cep')?.invalid && registerForm.get('cep')?.touched">
-            CEP inválido. Use o formato: 00000-000
+            CEP inválido. Use o formato: 99999-999
           </small>
         </div>
 
@@ -65,7 +66,7 @@
 
         <div class="p-field">
           <label for="tipoEstabelecimento">Tipo de Estabelecimento</label>
-          <p-dropdown formControlName="tipoEstabelecimento" [options]="tipoEstabelecimento" optionLabel="label"
+          <p-dropdown id="tipoEstabelecimento" formControlName="tipoEstabelecimento" [options]="tipoEstabelecimento" optionLabel="label"
             placeholder="Selecione o tipo" />
         </div>
 
@@ -80,7 +81,7 @@
 
         <div class="p-field">
           <label for="cnes">CNES</label>
-          <input pInputText id="cnes" formControlName="cnes" />
+          <p-inputMask mask="9999999" formControlName="cnes" placeholder="9999999" [autoClear]="false"/>
           <small class="p-error" *ngIf="registerForm.get('cnes')?.invalid && registerForm.get('cnes')?.touched">
             CNES deve conter exatamente 7 dígitos
           </small>
@@ -88,7 +89,7 @@
 
         <div class="p-field">
           <label for="telefone">Telefone</label>
-          <p-inputMask mask="(99) 99999-9999" formControlName="telefone" placeholder="(99) 99999-9999" />
+          <p-inputMask mask="(99) 99999-9999" formControlName="telefone" placeholder="(99) 99999-9999" [autoClear]="false" />
           <small class="p-error" *ngIf="registerForm.get('telefone')?.invalid && registerForm.get('telefone')?.touched">
             Telefone inválido. Use o formato: (99) 99999-9999
           </small>
