@@ -13,6 +13,7 @@ $fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
     justify-content: space-between;
     align-items: center;
     height: 12vh;
+    min-height: 90px;
     padding: 1vh 2vh;
     position: sticky;
     background-color: $primary-color;

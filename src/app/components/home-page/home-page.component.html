@@ -1,2 +1,34 @@
 <app-header></app-header>
-<p>home-page works!</p>
+<section class="home-page-container">
+    <div class="welcome-label">
+        <h1>Seja bem-vindo, <span>{{user.name}}</span></h1>
+        <p>Contratos, requisições e envios de bolsas.</p>
+    </div>
+    <div class="pending-cards-container">
+        <div class="pending-card-item" *ngFor="let cardItem of cardItems">
+            <img src={{cardItem.image}} alt="">
+            <div class="pending-card-item-text">
+                <h2>{{cardItem.title}}</h2>
+                <p>{{cardItem.pendingNumber}} pendente(s)</p>
+            </div>
+        </div>
+    </div>
+    <div class="content-table">
+        <p-table [value]="requisition" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+                <tr>
+                    <th>Tipo de Requisição</th>
+                    <th>Requisitante</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-requisition>
+                <tr>
+                    <td>{{ requisition.requisitionType }}</td>
+                    <td>{{ requisition.requester }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</section>
