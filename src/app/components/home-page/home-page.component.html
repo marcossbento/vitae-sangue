@@ -15,7 +15,7 @@
     </div>
     <div class="content-table">
         <p-table [value]="requisition" [tableStyle]="{ 'min-width': '50rem' }">
-            <ng-template #header>
+            <ng-template pTemplate="header">
                 <tr>
                     <th>Tipo de Requisição</th>
                     <th>Requisitante</th>
@@ -23,7 +23,7 @@
                     <th>Quantity</th>
                 </tr>
             </ng-template>
-            <ng-template #body let-requisition>
+            <ng-template pTemplate="body" let-requisition>
                 <tr>
                     <td>{{ requisition.requisitionType }}</td>
                     <td>{{ requisition.requester }}</td>

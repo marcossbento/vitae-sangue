@@ -54,4 +54,33 @@
         }
     }
 
+    ::ng-deep .content-table {
+        margin-top: 20px;
+        padding: 0 3rem;
+      
+        p-table {
+          width: 100%;
+          border-collapse: collapse;
+
+          .p-datatable-table {
+            background-color: $primary-color;
+          }
+      
+          th, td {
+            color: $off-white;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid $secondary-color;
+          }
+      
+          th {
+            font-weight: bold;
+          }
+      
+          tbody tr:hover {
+            background-color: $secondary-color;
+          }
+        }
+      }
+
 }
