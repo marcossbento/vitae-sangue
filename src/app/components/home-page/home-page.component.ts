@@ -27,9 +27,9 @@ constructor () {
   }
 
   this.cardItems = [
-    {title: 'Contratos', pendingNumber: '4 contratos', image: '../../assets/images/contratos.jpg'},
-    {title: 'Requisições de bolsas', pendingNumber: '6 requisições', image: '../../assets/images/bolsasDeSangue.jpg'},
-    {title: 'Envio de bolsas', pendingNumber: '1 envio', image: '../../assets/images/bolsasDeSangue.jpg'}
+    {title: 'Contratos', pendingNumber: '4 contratos', image: '../../assets/images/contratos.webp'},
+    {title: 'Requisições de bolsas', pendingNumber: '6 requisições', image: '../../assets/images/bolsasDeSangue.webp'},
+    {title: 'Envio de bolsas', pendingNumber: '1 envio', image: '../../assets/images/bolsasDeSangue.webp'}
   ];
 
   this.requisition = [
