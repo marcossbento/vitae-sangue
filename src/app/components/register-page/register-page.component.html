@@ -105,8 +105,9 @@
       </div>
 
       <div class="button-container">
-        <button pButton type="button" label="Voltar" routerLink="/login">Voltar</button>
-        <button pButton type="submit" label="Registre-se" [disabled]="!registerForm.valid">Registre-se</button>
+        <button pButton type="button" label="Voltar" (click)="onSubmit()" routerLink="/login">Voltar</button>
+        <button pButton type="submit" label="Registre-se" >Registre-se</button>
+
       </div>
     </form>
   </div>

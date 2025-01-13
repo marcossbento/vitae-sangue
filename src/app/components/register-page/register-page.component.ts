@@ -8,6 +8,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
+import { HttpClientModule } from '@angular/common/http'; 
+import { RegisterService } from '../../register.service';
 
 @Component({
   selector: 'app-register-page',
@@ -22,12 +24,15 @@ import { DropdownModule } from 'primeng/dropdown';
     FormsModule,
     InputMaskModule,
     DropdownModule,
+    HttpClientModule, 
   ],
   templateUrl: './register-page.component.html',
-  styleUrls: ['./register-page.component.scss']
+  styleUrls: ['./register-page.component.scss'],
+  providers: [RegisterService] 
 })
 export class RegisterPageComponent {
   registerForm!: FormGroup;
+
   tipoEstabelecimento: any[] = [
     { label: 'Público', value: 'Publico' },
     { label: 'Particular', value: 'Particular' },
@@ -36,7 +41,8 @@ export class RegisterPageComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private registerService: RegisterService
   ) {
     this.initForm();
   }
@@ -54,19 +60,45 @@ export class RegisterPageComponent {
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
       tipoEstabelecimento: ['', Validators.required],
       diretor: ['', Validators.required],
-      cnes: ['', [Validators.required, 
-        Validators.pattern(/^\d{7}$/),
-        Validators.minLength(7),
-        Validators.maxLength(7)]]
+      cnes: ['', [Validators.required, Validators.pattern(/^\d{7}$/)]],
     });
   }
 
   onSubmit(): void {
+    console.log('Formulário enviado:', this.registerForm.value);
     if (this.registerForm.valid) {
-      console.log(this.registerForm.value);
-      // Implementar lógica de submissão
+      // Mapear os campos do formulário para o formato da requisição
+      const requestBody = {
+        nome: this.registerForm.get('nome')?.value,
+        email: this.registerForm.get('email')?.value,
+        endereco: {
+          cep: this.registerForm.get('cep')?.value,
+          estado: this.registerForm.get('estado')?.value,
+          cidade: this.registerForm.get('cidade')?.value,
+          bairro: this.registerForm.get('bairro')?.value,
+          logradouro: this.registerForm.get('logradouro')?.value,
+          numero: this.registerForm.get('numero')?.value,
+        },
+        ddd: parseInt(this.registerForm.get('telefone')?.value.slice(1, 3), 10),
+        numeroTelefone: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10),
+        tipoEstabelecimento: this.registerForm.get('tipoEstabelecimento')?.value.toUpperCase(), // Certifique-se de que este valor corresponde à enum do backend
+        tipoHospital: 'PUBLICO', // Ajuste conforme necessário
+        diretorResponsavel: this.registerForm.get('diretor')?.value,
+      };
+  
+      // Enviar o corpo da requisição ao serviço
+      this.registerService.register(requestBody).subscribe(
+        (response) => {
+          console.log('Registro realizado com sucesso:', response);
+          this.router.navigate(['login']);
+        },
+        (error) => {
+          console.error('Erro ao realizar registro:', error);
+          alert('Erro ao registrar. Por favor, tente novamente.');
+        }
+      );
     } else {
-      Object.keys(this.registerForm.controls).forEach(key => {
+      Object.keys(this.registerForm.controls).forEach((key) => {
         const control = this.registerForm.get(key);
         if (control && control.invalid) {
           control.markAsTouched();
