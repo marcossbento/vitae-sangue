@@ -1,0 +1,146 @@
+@import '../../../variables.scss';
+
+:host {
+  display: block;
+  height: 100vh;
+  
+  .form-container {
+    display: flex;
+    height: 100%;
+    
+    .grid {
+      display: flex;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .step-navigation {
+    width: 300px;
+    min-width: 300px;
+    background-color: $off-white;
+    border-right: 1px solid $primary-color;
+    padding: 2rem;
+    height: 100vh;
+
+    .logo {
+      margin-bottom: 2rem;
+      img {
+        max-width: 200px;
+      }
+    }
+
+    h3 {
+      color: #4a4a4a;
+      margin-bottom: 2rem;
+    }
+
+    .step-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        i {
+          margin-right: 1rem;
+          font-size: 1.2rem;
+          color: $primary-color;
+        }
+
+        &.active {
+          color: $primary-color;
+          font-weight: bold;
+        }
+
+        &.completed {
+          color: #4a4a4a;
+          i {
+            color: #28a745;
+          }
+        }
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+
+  .form-content {
+    flex: 1;
+    padding: 2rem 3rem;
+    background-color: $off-white;
+    min-height: 100vh;
+
+    h2 {
+      color: $primary-color;
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+    }
+
+    .form-fields {
+      max-width: 600px;
+      background-color: $off-white;
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid $primary-color;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+      .field {
+        margin-bottom: 1.5rem;
+
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: #4a4a4a;
+          font-weight: 500;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          
+          &:focus {
+            outline: none;
+            border-color: #8B0000;
+            box-shadow: 0 0 0 2px rgba(139,0,0,0.1);
+          }
+        }
+      }
+
+      .radio-group {
+        display: flex;
+        gap: 2rem;
+        margin-top: 0.5rem;
+      }
+    }
+
+    .button-container {
+      margin-top: 2rem;
+      text-align: right;
+
+      button {
+        border-radius: 8px;
+        border: 1px solid $primary-color;
+        margin: 0 0.5rem;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background-color: $secondary-color
+        }
+      }
+    }
+  }
+}

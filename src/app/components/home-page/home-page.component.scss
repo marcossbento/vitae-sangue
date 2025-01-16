@@ -59,11 +59,11 @@
         padding: 0 3rem;
       
         p-table {
-          width: 100%;
-          border-collapse: collapse;
 
           .p-datatable-table {
             background-color: $primary-color;
+            border-radius: 12px;
+            padding: 0 8px;
           }
       
           th, td {

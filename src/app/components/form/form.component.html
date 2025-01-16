@@ -1,0 +1,113 @@
+<div class="form-container">
+  <div class="grid">
+    <!-- Navegação Lateral -->
+    <div class="step-navigation">
+      <div class="logo">
+        <img src="../../../assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue">
+      </div>
+      
+      <h3>Formulário de Exemplo</h3>
+      
+      <ul class="step-list">
+        @for (step of steps; track step.label; let i = $index) {
+          <li [class.active]="i === currentStep"
+              [class.completed]="step.completed"
+              (click)="goToStep(i)">
+            <i class="{{step.icon}}"></i>
+            <span>{{step.label}}</span>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <!-- Área do Formulário -->
+    <div class="form-content">
+      <h2>{{steps[currentStep].label}}</h2>
+      
+      <form [formGroup]="formGroup">
+        <!-- Dados Iniciais -->
+        @if (currentStep === 0) {
+          <div formGroupName="dadosIniciais" class="form-fields">
+            <div class="field">
+              <label>Campo 1</label>
+              <input pInputText formControlName="campo1" />
+            </div>
+            <div class="field">
+              <label>Campo 2</label>
+              <input pInputText formControlName="campo2" />
+            </div>
+          </div>
+        }
+
+        <!-- Dados Protocolares -->
+        @if (currentStep === 1) {
+          <div formGroupName="dadosProtocolares" class="form-fields">
+            <div class="field">
+              <label>Dado Protocolar 1</label>
+              <input pInputText formControlName="dadoProtocolar1" />
+            </div>
+            <div class="field">
+              <label>Dado Protocolar 2</label>
+              <input pInputText formControlName="dadoProtocolar2" />
+            </div>
+            <div class="field">
+              <label>Tipo de Hospital</label>
+              <div class="radio-group">
+                <p-radioButton value="publico" label="Público" 
+                              formControlName="tipoHospital">
+                </p-radioButton>
+                <p-radioButton value="particular" label="Particular" 
+                              formControlName="tipoHospital">
+                </p-radioButton>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Dados Administrativos -->
+        @if (currentStep === 2) {
+          <div formGroupName="dadosAdministrativos" class="form-fields">
+            <div class="field">
+              <label>Campo Admin 1</label>
+              <input pInputText formControlName="campoAdmin1" />
+            </div>
+            <div class="field">
+              <label>Campo Admin 2</label>
+              <input pInputText formControlName="campoAdmin2" />
+            </div>
+          </div>
+        }
+
+        <!-- Dados X -->
+        @if (currentStep === 3) {
+          <div formGroupName="dadosX" class="form-fields">
+            <div class="field">
+              <label>Campo X 1</label>
+              <input pInputText formControlName="campoX1" />
+            </div>
+            <div class="field">
+              <label>Campo X 2</label>
+              <input pInputText formControlName="campoX2" />
+            </div>
+          </div>
+        }
+
+        <div class="button-container">
+          @if (currentStep > 0) {
+            <button pButton label="Voltar" 
+                    class="p-button-outlined p-button-danger mr-2"
+                    (click)="previousStep()">
+            </button>
+          }
+          
+          <button pButton 
+                  [label]="currentStep === steps.length - 1 ? 'Finalizar' : 'Confirmar e avançar'"
+                  class="p-button-danger"
+                  (click)="nextStep()"
+                  [disabled]="!isStepValid(currentStep)">
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
