@@ -1,0 +1,49 @@
+<section class="register-profile-page">
+    <div class="register-profile-container">
+      <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
+      <h1>Gerenciamento de Perfis - <span>VitaeSangue</span></h1>
+      <h2>Formulário de Registro de Perfil</h2>
+      <h3>Preencha os detalhes abaixo</h3>
+  
+      <form [formGroup]="registerProfileForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+  
+          <div class="p-field">
+            <label for="nome">Nome do Perfil</label>
+            <input pInputText id="nome" formControlName="nome" />
+            <small class="p-error" *ngIf="registerProfileForm.get('nome')?.invalid && registerProfileForm.get('nome')?.touched">
+              O nome do perfil é obrigatório e deve ter entre 3 e 100 caracteres.
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="estabelecimento">Estabelecimento</label>
+            <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="estabelecimentoOptions" optionLabel="label" placeholder="Selecione o estabelecimento"></p-dropdown>
+            <small class="p-error" *ngIf="registerProfileForm.get('estabelecimento')?.invalid && registerProfileForm.get('estabelecimento')?.touched">
+              O estabelecimento é obrigatório.
+            </small>
+          </div>
+  
+          <div class="p-field">
+            <label for="isAdminSistema">É Administrador do Sistema?</label>
+            <p-checkbox id="isAdminSistema" formControlName="isAdminSistema" binary="true"></p-checkbox>
+          </div>
+  
+          <div class="p-field">
+            <label for="permissoes">Permissões</label>
+            <p-multiSelect id="permissoes" formControlName="permissoes" [filter]="false" [options]="permissaoOptions" optionLabel="label" placeholder="Selecione as permissões"></p-multiSelect>
+            <small class="p-error" *ngIf="registerProfileForm.get('permissoes')?.invalid && registerProfileForm.get('permissoes')?.touched">
+              Selecione pelo menos uma permissão.
+            </small>
+          </div>
+          
+        </div>
+  
+        <div class="button-container">
+          <button pButton type="button" label="Voltar" (click)="onBack()" routerLink="/profile-list">Voltar</button>
+          <button pButton type="submit" label="Registrar Perfil">Registrar Perfil</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  

@@ -1,0 +1,230 @@
+@import '../../../variables.scss';
+
+::ng-deep .register-profile-page {
+  background-color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+
+  .register-profile-container {
+    background-color: $off-white;
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 1100px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.432);
+
+    img {
+      width: 80px;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: $text-color;
+
+      span {
+        color: $primary-color;
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: $primary-color;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    h3 {
+      text-align: center;
+      color: $text-color;
+    }
+
+    form {
+      border: 1px solid $primary-color;
+      border-radius: 8px;
+      padding: 2rem;
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+
+        .p-field {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 1rem;
+
+          .p-multiSelect {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+
+            .p-multiSelect-label {
+              padding: 0.5rem;
+            }
+
+            .p-multiSelect-trigger {
+              padding: 0 0.5rem;
+            }
+          }
+
+          .p-multiSelect-panel {
+            .p-multiSelect-items {
+              padding: 0.5rem;
+              background-color: $primary-color;
+              color: $off-white;
+              border-radius: 0 0 4px 4px;
+
+              li {
+                &:hover {
+                  background-color: $secondary-color;
+                }
+              }
+            }
+          }
+
+          .p-dropdown {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+
+            .p-dropdown-label {
+                padding: 0.5rem;
+            }
+
+            .p-dropdown-trigger {
+                padding: 0 0.5rem;
+            }
+        }
+
+        .p-dropdown-panel {
+            .p-dropdown-items {
+                padding: 0.5rem;
+                background-color: $primary-color;
+                color: $off-white;
+                border-radius: 0 0 4px 4px;
+
+                li {
+
+                    &:hover {
+                        background-color: $secondary-color;
+                    }
+                }
+            }
+        }
+
+
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: $primary-color;
+            font-weight: 500;
+          }
+
+          p-inputnumber,
+          .p-inputnumber,
+          p-inputmask,
+          .p-inputmask {
+            display: flex;
+            width: 100%;
+          }
+
+          input {
+            display: flex;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+
+            &:focus {
+              outline: none;
+              border-color: $primary-color;
+              box-shadow: 0 0 0 2px rgba($primary-color, 0.25);
+            }
+          }
+
+          input.ng-invalid.ng-touched,
+          p-inputnumber.ng-invalid.ng-touched,
+          p-inputmask.ng-invalid.ng-touched {
+            border: 1px solid $secondary-color;
+            box-shadow: 0 0 0 1px $secondary-color;
+            border-radius: 4px;
+          }
+
+          small {
+            color: $error-color;
+            margin-top: 2px;
+          }
+        }
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: space-around;
+        padding-top: 1.5rem;
+      }
+
+      button[type='submit'] {
+        width: 40%;
+        padding: 0.75rem;
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+
+      button[type='button'] {
+        width: 40%;
+        padding: 0.75rem;
+        background-color: $off-white;
+        color: $primary-color;
+        border: 1px solid $primary-color;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+          color: $off-white;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .register-profile-page {
+    .register-profile-container {
+      form {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .p-multiselect-label {
+    display: none;  /* Remove o campo de texto (caixa de entrada) */
+  }
