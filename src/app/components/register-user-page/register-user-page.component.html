@@ -1,0 +1,115 @@
+<section class="register-user-page">
+  <div class="register-user-container">
+    <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
+    <h1>Boas-vindas à <span>VitaeSangue!</span></h1>
+    <h2>Formulário de Registro de Usuário</h2>
+    <h3>Insira as informações requeridas abaixo</h3>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+
+        <div class="p-field">
+          <label for="nome">Nome</label>
+          <input pInputText id="nome" formControlName="nome" />
+          <small class="p-error" *ngIf="registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched">
+            Nome é obrigatório e deve ter no mínimo 3 caracteres
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="cpf">CPF</label>
+          <p-inputMask mask="999.999.999-99" formControlName="cpf" placeholder="000.000.000-00" [autoClear]="false"/>
+          <small class="p-error" *ngIf="registerForm.get('cpf')?.invalid && registerForm.get('cpf')?.touched">
+            CPF inválido. Use o formato: 000.000.000-00
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="email">E-mail</label>
+          <input pInputText id="email" formControlName="email" type="email" placeholder="seuemail@email.com" />
+          <small class="p-error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+            E-mail inválido
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="senha">Senha</label>
+          <input pInputText id="senha" formControlName="senha" type="password" placeholder="Sua senha" />
+          <small class="p-error" *ngIf="registerForm.get('senha')?.invalid && registerForm.get('senha')?.touched">
+            A senha é obrigatória e deve ter no mínimo 6 caracteres
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="cep">CEP</label>
+          <p-inputMask mask="99999-999" formControlName="cep" placeholder="00000-000" [autoClear]="false"/>
+          <small class="p-error" *ngIf="registerForm.get('cep')?.invalid && registerForm.get('cep')?.touched">
+            CEP inválido. Use o formato: 99999-999
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="logradouro">Logradouro</label>
+          <input pInputText id="logradouro" formControlName="logradouro" />
+          <small class="p-error" *ngIf="registerForm.get('logradouro')?.invalid && registerForm.get('logradouro')?.touched">
+            Logradouro é obrigatório
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="bairro">Bairro</label>
+          <input pInputText id="bairro" formControlName="bairro" />
+          <small class="p-error" *ngIf="registerForm.get('bairro')?.invalid && registerForm.get('bairro')?.touched">
+            Bairro é obrigatório
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="cidade">Cidade</label>
+          <input pInputText id="cidade" formControlName="cidade" />
+          <small class="p-error" *ngIf="registerForm.get('cidade')?.invalid && registerForm.get('cidade')?.touched">
+            Cidade é obrigatória
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="estado">Estado</label>
+          <input pInputText id="estado" formControlName="estado" />
+          <small class="p-error" *ngIf="registerForm.get('estado')?.invalid && registerForm.get('estado')?.touched">
+            Estado é obrigatório (ex: SP)
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="telefone">Telefone</label>
+          <p-inputMask mask="(99) 99999-9999" formControlName="telefone" placeholder="(99) 99999-9999" [autoClear]="false"/>
+          <small class="p-error" *ngIf="registerForm.get('telefone')?.invalid && registerForm.get('telefone')?.touched">
+            Telefone inválido. Use o formato: (99) 99999-9999
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="perfil">Perfil</label>
+          <p-dropdown id="perfil" formControlName="perfil" [options]="perfilOptions" optionLabel="label" placeholder="Selecione o perfil" />
+          <small class="p-error" *ngIf="registerForm.get('perfil')?.invalid && registerForm.get('perfil')?.touched">
+            Perfil é obrigatório
+          </small>
+        </div>
+
+        <div class="p-field">
+          <label for="estabelecimento">Estabelecimento</label>
+          <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="estabelecimentoOptions" optionLabel="label" placeholder="Selecione o estabelecimento" />
+          <small class="p-error" *ngIf="registerForm.get('estabelecimento')?.invalid && registerForm.get('estabelecimento')?.touched">
+            Estabelecimento é obrigatório
+          </small>
+        </div>
+
+      </div>
+
+      <div class="button-container">
+        <button pButton type="button" label="Voltar" (click)="onSubmit()" routerLink="/login">Voltar</button>
+        <button pButton type="submit" label="Registre-se">Registre-se</button>
+      </div>
+    </form>
+  </div>
+</section>
