@@ -14,17 +14,16 @@
                 </p-floatLabel>
                 <p-floatLabel>
                     <label for="senha">Senha</label>
-                    <p-password [(ngModel)]="senha" 
-                                [toggleMask]="true" 
+                    <p-password [(ngModel)]="senha"
+                                [toggleMask]="true"
                                 [feedback]="false"
                                 name="senha"
                                 id="senha"
                                 styleClass="p-password p-component p-inputwrapper p-input-icon-right" />
-                    <a href="">Esqueceu sua senha?</a>
-                </p-floatLabel> 
+                </p-floatLabel>
                 <button type="submit" pButton label="Entrar" (click)="onLogin()">Entrar</button>
                 <p>--ou--</p>
                 <button type="button" routerLink="/register">Crie uma conta</button>
-            </form>  
+            </form>
         </div>
 </section>
