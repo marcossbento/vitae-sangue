@@ -8,7 +8,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
 import { RegisterService } from '../../register.service';
 
 @Component({
@@ -24,16 +24,25 @@ import { RegisterService } from '../../register.service';
     FormsModule,
     InputMaskModule,
     DropdownModule,
-    HttpClientModule, 
+    HttpClientModule,
   ],
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.scss'],
-  providers: [RegisterService] 
+  providers: [RegisterService]
 })
 export class RegisterPageComponent {
   registerForm!: FormGroup;
 
+  showCnes: boolean = true;
+  showTipoHospital: boolean = true;
+  showDiretor: boolean = true;
+
   tipoEstabelecimento: any[] = [
+    { label: 'Hospital', value: 'Hospital' },
+    { label: 'Hemocentro', value: 'Hemocentro' }
+  ];
+
+  tipoHospital: any[] = [
     { label: 'Público', value: 'Publico' },
     { label: 'Particular', value: 'Particular' },
     { label: 'Filantrópico', value: 'Filantropico' }
@@ -47,8 +56,18 @@ export class RegisterPageComponent {
     this.initForm();
   }
 
+  ngOnInit(): void {
+    const tipoEstabelecimentoControl = this.registerForm.get('tipoEstabelecimento');
+    console.log('Valor inicial tipoEstabelecimento:', tipoEstabelecimentoControl?.value);  // Verifique o valor inicial
+    tipoEstabelecimentoControl?.valueChanges.subscribe((value) => {
+      console.log('Novo valor de tipoEstabelecimento:', value);  // Verifique se o valueChanges está sendo disparado corretamente
+      this.toggleFieldsBasedOnEstabelecimento(value);
+    });
+  }
+
   private initForm(): void {
     this.registerForm = this.fb.group({
+      tipoEstabelecimento: ['', Validators.required],
       nome: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
@@ -58,10 +77,37 @@ export class RegisterPageComponent {
       cidade: ['', Validators.required],
       estado: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
-      tipoEstabelecimento: ['', Validators.required],
+      tipoHospital: ['', Validators.required],
       diretor: ['', Validators.required],
       cnes: ['', [Validators.required, Validators.pattern(/^\d{7}$/)]],
     });
+
+    this.toggleFieldsBasedOnEstabelecimento(this.registerForm.get('tipoEstabelecimento')?.value);
+  }
+
+  private toggleFieldsBasedOnEstabelecimento(value: { label: string, value: string } | null): void {
+    // Verifique se o valor não é null e use a propriedade 'value'
+    const tipoEstabelecimento = value?.value || '';
+
+    console.log('toggleFieldsBasedOnEstabelecimento chamado com valor:', tipoEstabelecimento);
+
+    if (tipoEstabelecimento === 'Hemocentro') {
+      this.showCnes = false;
+      this.showTipoHospital = false;
+      this.showDiretor = false;
+
+      this.registerForm.get('cnes')?.disable();
+      this.registerForm.get('tipoHospital')?.disable();
+      this.registerForm.get('diretor')?.disable();
+    } else {
+      this.showCnes = true;
+      this.showTipoHospital = true;
+      this.showDiretor = true;
+
+      this.registerForm.get('cnes')?.enable();
+      this.registerForm.get('tipoHospital')?.enable();
+      this.registerForm.get('diretor')?.enable();
+    }
   }
 
   onSubmit(): void {
@@ -81,11 +127,10 @@ export class RegisterPageComponent {
         },
         ddd: parseInt(this.registerForm.get('telefone')?.value.slice(1, 3), 10),
         numeroTelefone: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10),
-        tipoEstabelecimento: this.registerForm.get('tipoEstabelecimento')?.value.toUpperCase(), // Certifique-se de que este valor corresponde à enum do backend
-        tipoHospital: 'PUBLICO', // Ajuste conforme necessário
+        tipoHospital: this.registerForm.get('tipoHospital')?.value.toUpperCase(), // Certifique-se de que este valor corresponde à enum do backend
         diretorResponsavel: this.registerForm.get('diretor')?.value,
       };
-  
+
       // Enviar o corpo da requisição ao serviço
       this.registerService.register(requestBody).subscribe(
         (response) => {
@@ -105,5 +150,6 @@ export class RegisterPageComponent {
         }
       });
     }
+
   }
 }

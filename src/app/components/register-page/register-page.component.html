@@ -7,6 +7,13 @@
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
+
+        <div class="p-field">
+          <label for="tipoEstabelecimento">Tipo de Estabelecimento</label>
+          <p-dropdown id="tipoEstabelecimento" formControlName="tipoEstabelecimento" [options]="tipoEstabelecimento" optionLabel="label"
+            placeholder="Selecione o tipo" />
+        </div>
+
         <div class="p-field">
           <label for="nome">Nome</label>
           <input pInputText id="nome" formControlName="nome" />
@@ -31,7 +38,7 @@
           </small>
         </div>
 
-        <div class="p-field">
+        <div class="p-field" *ngIf="showDiretor">
           <label for="diretor">Diretor responsável</label>
           <input pInputText id="diretor" formControlName="diretor" />
           <small class="p-error" *ngIf="registerForm.get('diretor')?.invalid && registerForm.get('diretor')?.touched">
@@ -64,9 +71,9 @@
           </small>
         </div>
 
-        <div class="p-field">
-          <label for="tipoEstabelecimento">Tipo de Estabelecimento</label>
-          <p-dropdown id="tipoEstabelecimento" formControlName="tipoEstabelecimento" [options]="tipoEstabelecimento" optionLabel="label"
+        <div class="p-field" *ngIf="showTipoHospital">
+          <label for="tipoHospital">Tipo de Hospital</label>
+          <p-dropdown id="tipoHospital" formControlName="tipoHospital" [options]="tipoHospital" optionLabel="label"
             placeholder="Selecione o tipo" />
         </div>
 
@@ -79,7 +86,7 @@
           </small>
         </div>
 
-        <div class="p-field">
+        <div class="p-field" *ngIf="showCnes">
           <label for="cnes">CNES</label>
           <p-inputMask mask="9999999" formControlName="cnes" placeholder="9999999" [autoClear]="false"/>
           <small class="p-error" *ngIf="registerForm.get('cnes')?.invalid && registerForm.get('cnes')?.touched">
