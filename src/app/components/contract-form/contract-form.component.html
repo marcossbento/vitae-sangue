@@ -1,0 +1,75 @@
+<div class="form-container">
+  <div class="grid">
+    <!-- Navegação Lateral -->
+    <div class="step-navigation">
+      <div class="logo">
+        <img src="../../../assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue">
+      </div>
+
+      <h3>Formulário de Exemplo</h3>
+
+      <ul class="step-list">
+        @for (step of steps; track step.label; let i = $index) {
+        <li [class.active]="i === currentStep" [class.completed]="step.completed" (click)="goToStep(i)">
+          <i class="{{step.icon}}"></i>
+          <span>{{step.label}}</span>
+        </li>
+        }
+      </ul>
+    </div>
+
+    <!-- Área do Formulário -->
+    <div class="form-content">
+      <h2>{{steps[currentStep].label}}</h2>
+
+      <form [formGroup]="formGroup">
+        
+        <!-- Hospital e Usuário Requeridos -->
+        @if (currentStep === 0) {
+        <div formGroupName="dadosRequeridos" class="form-fields">
+          <div class="p-field">
+            <label for="hemocentro">Hemocentro requerido</label>
+            <p-dropdown id="hemocentro" formControlName="hemocentro" [options]="hemocentro" optionLabel="label"
+              placeholder="Selecione o tipo" />
+          </div>
+          <div class="p-field">
+            <label for="usuarioRequerido">Usuário requerido</label>
+            <p-dropdown id="usuarioRequerido" formControlName="usuarioRequerido" [options]="usuarioRequerido"
+              optionLabel="label" placeholder="Selecione o usuário" />
+          </div>
+
+        </div>
+        }
+
+        <!-- Datas de início e vencimento e quantidade de sangue -->
+        @if (currentStep === 1) {
+        <div formGroupName="dataQuantidade" class="form-fields">
+          <div class="field">
+            <label>Data de Início</label>
+            <p-calendar formControlName="dataInicio" />
+          </div>
+          <div class="field">
+            <label>Data de vencimento</label>
+            <p-calendar formControlName="dataVencimento" />
+          </div>
+          <div class="field">
+            <label>Quantidade de sangue</label>
+            <p-inputNumber inputId="integeronly" formControlName="quantidadeSangue" />
+          </div>
+        </div>
+        }
+
+        <div class="button-container">
+          @if (currentStep > 0) {
+          <button pButton label="Voltar" class="p-button-outlined p-button-danger mr-2" (click)="previousStep()">
+          </button>
+          }
+
+          <button pButton [label]="currentStep === steps.length - 1 ? 'Finalizar' : 'Confirmar e avançar'"
+            class="p-button-danger" (click)="nextStep()" [disabled]="!isStepValid(currentStep)">
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

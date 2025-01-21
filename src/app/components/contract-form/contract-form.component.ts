@@ -6,9 +6,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @Component({
-  selector: 'app-form',
+  selector: 'app-contract-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -16,41 +19,36 @@ import { ButtonModule } from 'primeng/button';
     StepperModule,
     InputTextModule,
     RadioButtonModule,
-    ButtonModule
+    ButtonModule,
+    DropdownModule,
+    CalendarModule,
+    InputNumberModule
   ],
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss']
+  templateUrl: './contract-form.component.html',
+  styleUrls: ['./contract-form.component.scss']
 })
-export class FormComponent {
+export class ContractFormComponent {
   formGroup: FormGroup;
   currentStep: number = 0;
+  hemocentro: any[]|undefined;
+  usuarioRequerido: any[]|undefined;
   
   steps = [
-    { label: 'Dados iniciais', icon: 'pi pi-home', completed: false, formGroupName: 'dadosIniciais' },
-    { label: 'Dados protocolares', icon: 'pi pi-file', completed: false, formGroupName: 'dadosProtocolares' },
-    { label: 'Dados administrativos', icon: 'pi pi-user', completed: false, formGroupName: 'dadosAdministrativos' },
-    { label: 'Dados x', icon: 'pi pi-cog', completed: false, formGroupName: 'dadosX' }
+    { label: 'Hemocentro e usuário requeridos', icon: 'pi pi-home', completed: false, formGroupName: 'dadosRequeridos' },
+    { label: 'Datas e quantidade', icon: 'pi pi-file', completed: false, formGroupName: 'dataQuantidade' }
   ];
   
   constructor(private fb: FormBuilder) {
     this.formGroup = this.fb.group({
-      dadosIniciais: this.fb.group({
-        campo1: ['', Validators.required],
-        campo2: ['', Validators.required]
+      dadosRequeridos: this.fb.group({
+        hemocentro: ['', Validators.required],
+        usuarioRequerido: ['', Validators.required]
       }),
-      dadosProtocolares: this.fb.group({
-        dadoProtocolar1: ['', Validators.required],
-        dadoProtocolar2: ['', Validators.required],
-        tipoHospital: ['', Validators.required]
+      dataQuantidade: this.fb.group({
+        dataInicio: ['', Validators.required],
+        dataVencimento: ['', Validators.required],
+        quantidadeSangue: ['', Validators.required]
       }),
-      dadosAdministrativos: this.fb.group({
-        campoAdmin1: ['', Validators.required],
-        campoAdmin2: ['', Validators.required]
-      }),
-      dadosX: this.fb.group({
-        campoX1: ['', Validators.required],
-        campoX2: ['', Validators.required]
-      })
     });
   }
 
