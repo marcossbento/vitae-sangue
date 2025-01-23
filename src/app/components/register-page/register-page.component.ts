@@ -127,7 +127,7 @@ export class RegisterPageComponent {
         },
         ddd: parseInt(this.registerForm.get('telefone')?.value.slice(1, 3), 10),
         numeroTelefone: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10),
-        tipoEstabelecimento: "HEMOCETRO",
+        tipoEstabelecimento: "HEMOCENTRO",
         tipoHospital: null, // Certifique-se de que este valor corresponde à enum do backend
         diretorResponsavel: this.registerForm.get('diretor')?.value,
       };
