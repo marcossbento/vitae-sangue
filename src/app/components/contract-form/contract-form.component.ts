@@ -1,5 +1,4 @@
-// form.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { StepperModule } from 'primeng/stepper';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,6 +8,8 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { HemocentroService } from '../../services/hemocentro.service';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-contract-form',
@@ -27,10 +28,11 @@ import { InputNumberModule } from 'primeng/inputnumber';
   templateUrl: './contract-form.component.html',
   styleUrls: ['./contract-form.component.scss']
 })
-export class ContractFormComponent {
+export class ContractFormComponent implements OnInit{
   formGroup: FormGroup;
   currentStep: number = 0;
-  hemocentro: any[]|undefined;
+  hemocentros: any[] = [];
+  selectedHemocentro: any;
   usuarioRequerido: any[]|undefined;
   
   steps = [
@@ -38,7 +40,7 @@ export class ContractFormComponent {
     { label: 'Datas e quantidade', icon: 'pi pi-file', completed: false, formGroupName: 'dataQuantidade' }
   ];
   
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private hemocentroService: HemocentroService) { 
     this.formGroup = this.fb.group({
       dadosRequeridos: this.fb.group({
         hemocentro: ['', Validators.required],
@@ -49,6 +51,20 @@ export class ContractFormComponent {
         dataVencimento: ['', Validators.required],
         quantidadeSangue: ['', Validators.required]
       }),
+    });
+  }
+
+  ngOnInit(): void {
+    this.carregarHemocentros(); // Carrega hemocentros ao inicializar
+  }
+
+  carregarHemocentros(): void {
+    this.hemocentroService.getHemocentros().subscribe({
+      next: (response) => {
+        // Assume que o backend retorna "content" dentro da resposta paginada
+        this.hemocentros = response.content || []; 
+      },
+      error: (err) => console.error('Erro ao carregar:', err)
     });
   }
 

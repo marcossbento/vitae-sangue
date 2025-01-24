@@ -3,11 +3,11 @@
 :host {
   display: block;
   height: 100vh;
-  
+
   .form-container {
     display: flex;
     height: 100%;
-    
+
     .grid {
       display: flex;
       width: 100%;
@@ -26,6 +26,7 @@
 
     .logo {
       margin-bottom: 2rem;
+
       img {
         max-width: 200px;
       }
@@ -62,6 +63,7 @@
 
         &.completed {
           color: #4a4a4a;
+
           i {
             color: #28a745;
           }
@@ -87,12 +89,45 @@
     }
 
     .form-fields {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
       max-width: 600px;
       background-color: $off-white;
       padding: 2rem;
       border-radius: 8px;
       border: 1px solid $primary-color;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      .p-field {
+        display: flex;
+        flex-direction: column;
+      }
+
+      ::ng-deep p-dropdown {
+        border: 1px solid $primary-color;
+        border-radius: 4px;
+
+        .p-dropdown-label {
+          padding: 0.5rem;
+        }
+
+        .p-dropdown-panel {
+          .p-dropdown-items {
+            padding: 0.5rem;
+            background-color: $primary-color;
+            color: $off-white;
+            border-radius: 0 0 4px 4px;
+
+            li {
+
+              &:hover {
+                background-color: $secondary-color;
+              }
+            }
+          }
+        }
+      }
 
       .field {
         margin-bottom: 1.5rem;
@@ -109,11 +144,11 @@
           padding: 0.5rem;
           border: 1px solid #ced4da;
           border-radius: 4px;
-          
+
           &:focus {
             outline: none;
             border-color: #8B0000;
-            box-shadow: 0 0 0 2px rgba(139,0,0,0.1);
+            box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
           }
         }
       }
@@ -136,7 +171,7 @@
         padding: 0.75rem 1.5rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        
+
         &:hover {
           background-color: $secondary-color
         }

@@ -29,8 +29,14 @@
         <div formGroupName="dadosRequeridos" class="form-fields">
           <div class="p-field">
             <label for="hemocentro">Hemocentro requerido</label>
-            <p-dropdown id="hemocentro" formControlName="hemocentro" [options]="hemocentro" optionLabel="label"
-              placeholder="Selecione o tipo" />
+            <p-dropdown id="hemocentro" formControlName="hemocentro" [options]="hemocentros" optionLabel="estabelecimento.nome"
+              placeholder="Selecione o tipo" [showClear]="true">
+              
+              <ng-template pTemplate="empty">
+                Nenhum hemocentro encontrado
+              </ng-template>
+
+            </p-dropdown>
           </div>
           <div class="p-field">
             <label for="usuarioRequerido">Usuário requerido</label>
