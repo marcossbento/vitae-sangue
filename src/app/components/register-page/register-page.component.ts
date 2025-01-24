@@ -38,14 +38,14 @@ export class RegisterPageComponent {
   showDiretor: boolean = true;
 
   tipoEstabelecimento: any[] = [
-    { label: 'Hospital', value: 'Hospital' },
-    { label: 'Hemocentro', value: 'Hemocentro' }
+    { label: 'Hospital', value: 'HOSPITAL' },
+    { label: 'Hemocentro', value: 'HEMOCENTRO' }
   ];
 
   tipoHospital: any[] = [
-    { label: 'Público', value: 'Publico' },
-    { label: 'Particular', value: 'Particular' },
-    { label: 'Filantrópico', value: 'Filantropico' }
+    { label: 'Público', value: 'PUBLICO' },
+    { label: 'Particular', value: 'PARTICULAR' },
+    { label: 'Filantrópico', value: 'FILANTROPICO' }
   ];
 
   constructor(
@@ -58,9 +58,9 @@ export class RegisterPageComponent {
 
   ngOnInit(): void {
     const tipoEstabelecimentoControl = this.registerForm.get('tipoEstabelecimento');
-    console.log('Valor inicial tipoEstabelecimento:', tipoEstabelecimentoControl?.value);  // Verifique o valor inicial
+    console.log('Valor inicial tipoEstabelecimento:', tipoEstabelecimentoControl?.value);  
     tipoEstabelecimentoControl?.valueChanges.subscribe((value) => {
-      console.log('Novo valor de tipoEstabelecimento:', value);  // Verifique se o valueChanges está sendo disparado corretamente
+      console.log('Novo valor de tipoEstabelecimento:', value);  
       this.toggleFieldsBasedOnEstabelecimento(value);
     });
   }
@@ -86,35 +86,61 @@ export class RegisterPageComponent {
   }
 
   private toggleFieldsBasedOnEstabelecimento(value: { label: string, value: string } | null): void {
-    // Verifique se o valor não é null e use a propriedade 'value'
     const tipoEstabelecimento = value?.value || '';
-
+  
     console.log('toggleFieldsBasedOnEstabelecimento chamado com valor:', tipoEstabelecimento);
-
-    if (tipoEstabelecimento === 'Hemocentro') {
+  
+    if (tipoEstabelecimento === 'HEMOCENTRO') {
       this.showCnes = false;
       this.showTipoHospital = false;
       this.showDiretor = false;
-
+  
       this.registerForm.get('cnes')?.disable();
       this.registerForm.get('tipoHospital')?.disable();
       this.registerForm.get('diretor')?.disable();
+  
+      // Limpar valor do campo ao desabilitar
+      this.registerForm.get('tipoHospital')?.setValue(null);
     } else {
       this.showCnes = true;
       this.showTipoHospital = true;
       this.showDiretor = true;
-
+  
       this.registerForm.get('cnes')?.enable();
       this.registerForm.get('tipoHospital')?.enable();
       this.registerForm.get('diretor')?.enable();
+  
+      // Adicionar valor padrão ao habilitar
+      if (!this.registerForm.get('tipoHospital')?.value) {
+        this.registerForm.get('tipoHospital')?.setValue('PUBLICO');
+      }
     }
   }
-
+  
   onSubmit(): void {
     console.log('Formulário enviado:', this.registerForm.value);
     if (this.registerForm.valid) {
-      // Mapear os campos do formulário para o formato da requisição
-      const requestBody = {
+      interface RequestBody {
+        nome: any;
+        email: any;
+        endereco: {
+          cep: any;
+          estado: any;
+          cidade: any;
+          bairro: any;
+          logradouro: any;
+          numero: any;
+        };
+        ddd: number;
+        numeroTelefone: number;
+        tipoEstabelecimento: any;
+        diretorResponsavel: any;
+        tipoHospital?: any; 
+        cnes?: string; 
+      }
+  
+ 
+      const requestBody: RequestBody = {
         nome: this.registerForm.get('nome')?.value,
         email: this.registerForm.get('email')?.value,
         endereco: {
@@ -127,11 +153,23 @@ export class RegisterPageComponent {
         },
         ddd: parseInt(this.registerForm.get('telefone')?.value.slice(1, 3), 10),
         numeroTelefone: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10),
-        tipoEstabelecimento: "HEMOCENTRO",
-        tipoHospital: null, // Certifique-se de que este valor corresponde à enum do backend
+        tipoEstabelecimento: this.registerForm.get('tipoEstabelecimento')?.value?.value.toUpperCase(),
         diretorResponsavel: this.registerForm.get('diretor')?.value,
       };
-
+  
+      // Adicionar campos extras condicionalmente
+      if (this.registerForm.get('tipoEstabelecimento')?.value?.value.toUpperCase() === "HOSPITAL") {
+        console.log("O tipo de estabelecimento é HOSPITAL, adicionando campos extras...");
+  
+        // Garantir que o valor padrão é atribuído a tipoHospital
+        if (!this.registerForm.get('tipoHospital')?.value) {
+          this.registerForm.get('tipoHospital')?.setValue('PUBLICO');
+        }
+  
+        requestBody.tipoHospital = this.registerForm.get('tipoHospital')?.value;
+        requestBody.cnes = this.registerForm.get('cnes')?.value;
+      }
+  
       // Enviar o corpo da requisição ao serviço
       this.registerService.register(requestBody).subscribe(
         (response) => {
@@ -151,6 +189,5 @@ export class RegisterPageComponent {
         }
       });
     }
-
   }
 }
