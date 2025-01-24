@@ -9,7 +9,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
-import { RegisterService } from '../../register.service';
+import { RegisterService } from '../../services/register.service';
 
 @Component({
   selector: 'app-register-page',

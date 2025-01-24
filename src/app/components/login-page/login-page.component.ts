@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
