@@ -1,0 +1,94 @@
+<div class="form-container">
+    <div class="grid">
+      <!-- Navegação Lateral -->
+      <div class="step-navigation">
+        <div class="logo">
+          <img src="../../../assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue">
+        </div>
+  
+        <h3>Formulário de Requisição</h3>
+  
+        <ul class="step-list">
+          @for (step of steps; track step.label; let i = $index) {
+          <li [class.active]="i === currentStep" [class.completed]="step.completed" (click)="goToStep(i)">
+            <i class="{{step.icon}}"></i>
+            <span>{{step.label}}</span>
+          </li>
+          }
+        </ul>
+      </div>
+  
+      <!-- Área do Formulário -->
+      <div class="form-content">
+        <h2>{{ steps[currentStep].label }}</h2>
+  
+        <form [formGroup]="formGroup">
+          <!-- Seleção do Hemocentro -->
+          @if (currentStep === 0) {
+            <div formGroupName="dadosHemocentro" class="form-fields">
+              <div class="p-field">
+                <label for="hemocentro">Hemocentro requerido</label>
+                <p-dropdown id="hemocentro" formControlName="hemocentro" [options]="hemocentros"
+                  optionLabel="estabelecimento.nome" placeholder="Selecione o tipo" [showClear]="true">
+    
+                  <ng-template pTemplate="empty">
+                    Nenhum hemocentro encontrado
+                  </ng-template>
+    
+                </p-dropdown>
+              </div>
+            </div>
+          }
+  
+          <!-- Detalhes da Requisição -->
+          @if (currentStep === 1) {
+          <div formGroupName="dadosRequisicao" class="form-fields">
+            <div class="field">
+              <label for="hemocomponente">Hemocomponente</label>
+              <p-dropdown
+                id="hemocomponente"
+                formControlName="hemocomponente"
+                [options]="hemocomponentes"
+                placeholder="Selecione o hemocomponente"
+              ></p-dropdown>
+            </div>
+            <div class="field">
+              <label for="abo">Tipo Sanguíneo (ABO)</label>
+              <p-dropdown
+                id="abo"
+                formControlName="abo"
+                [options]="tiposAbo"
+                placeholder="Selecione o tipo sanguíneo"
+              ></p-dropdown>
+            </div>
+            <div class="field">
+              <label for="rh">Fator RH</label>
+              <p-dropdown
+                id="rh"
+                formControlName="rh"
+                [options]="fatoresRh"
+                placeholder="Selecione o fator RH"
+              ></p-dropdown>
+            </div>
+            <div class="field">
+              <label for="qtdRequirida">Quantidade Requerida</label>
+              <p-inputNumber id="qtdRequirida" formControlName="qtdRequirida"></p-inputNumber>
+            </div>
+          </div>
+          }
+  
+          <div class="button-container">
+            @if (currentStep > 0) {
+            <button pButton label="Voltar" class="p-button-outlined p-button-danger mr-2" (click)="previousStep()">
+            </button>
+            }
+  
+            <button pButton [label]="currentStep === steps.length - 1 ? 'Finalizar' : 'Confirmar e avançar'"
+              class="p-button-danger" (click)="nextStep()" [disabled]="!isStepValid(currentStep)">
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

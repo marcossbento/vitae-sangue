@@ -42,10 +42,10 @@ export class RegisterProfilePageComponent {
   ];
 
   permissaoOptions: any[] = [
-    { label: 'Visualizar Dados', value: 'VIEW_DATA' },
-    { label: 'Editar Dados', value: 'EDIT_DATA' },
-    { label: 'Excluir Dados', value: 'DELETE_DATA' },
-    { label: 'Gerenciar Usuários', value: 'MANAGE_USERS' },
+    { label: 'Criação', value: 'VIEW_DATA' },
+    { label: 'Atualização', value: 'EDIT_DATA' },
+    { label: 'Visualização', value: 'DELETE_DATA' },
+    { label: 'Deletar', value: 'MANAGE_USERS' },
   ];
 
   constructor(

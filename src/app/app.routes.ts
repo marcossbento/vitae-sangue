@@ -6,15 +6,16 @@ import { HomePageComponent } from './components/home-page/home-page.component';
 import { ContractFormComponent } from './components/contract-form/contract-form.component';
 import { RegisterUserPageComponent } from './components/register-user-page/register-user-page.component';
 import { RegisterProfilePageComponent } from './components/register-profile-page/register-profile-page.component';
-
+import { RequisitionFormComponent } from './components/requisition-form/requisition-form.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
-  { path: 'register-user', component: RegisterUserPageComponent },
-  { path: 'register-profile', component: RegisterProfilePageComponent },
+  { path: 'registerUser', component: RegisterUserPageComponent },
+  { path: 'registerProfile', component: RegisterProfilePageComponent },
   { path: 'home', component: HomePageComponent },
   { path: 'contractForm', component: ContractFormComponent },
+  { path: 'requisitionForm', component: RequisitionFormComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
 
