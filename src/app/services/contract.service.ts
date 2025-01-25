@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ContractService {
-  private apiUrl = `http://localhost:8080/contrato`; // Ajuste para o endpoint correto
+  private apiUrl = `http://localhost:8080/contrato`;
 
   constructor(private http: HttpClient) { }
 

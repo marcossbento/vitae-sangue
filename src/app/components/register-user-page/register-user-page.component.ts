@@ -10,6 +10,8 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterService } from '../../services/register.service';
+import { ProfileService } from '../../services/profile.service';
+import { HemocentroService } from '../../services/hemocentro.service';
 
 @Component({
   selector: 'app-register-user-page',
@@ -32,30 +34,51 @@ import { RegisterService } from '../../services/register.service';
 })
 export class RegisterUserPageComponent {
   registerForm!: FormGroup;
+  profiles: any[] = [];
 
-  perfilOptions: any[] = [
-    { label: 'Administrador', value: 'Administrador' },
-    { label: 'Operador', value: 'Operador' },
-  ];
-
-  estabelecimentoOptions: any[]= [
-    { label: 'Hemonúcleo Araraquara', value: 'Hemocentro' },
-    { label: 'Santa Casa de Araraquara', value: 'Hospital' },
-  ];
+  establishments: any[]= [];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private registerService: RegisterService
+    private registerService: RegisterService,
+    private profileService: ProfileService,
+    private hemocentroService: HemocentroService
   ) {
     this.initForm();
   }
 
   ngOnInit(): void {
+    this.loadProfiles();
+    this.loadEstablishments();
     const perfilControl = this.registerForm.get('perfil');
     console.log('Valor inicial perfil:', perfilControl?.value);  // Verifique o valor inicial
     perfilControl?.valueChanges.subscribe((value) => {
       console.log('Novo valor de perfil:', value);  // Verifique se o valueChanges está sendo disparado corretamente
+    });
+  }
+
+  private loadProfiles(): void {
+    this.profileService.getProfiles().subscribe({
+      next: (response) => {
+        console.log('Resposta da API:', response);
+        this.profiles = response || [];
+      },
+      error: (error) => {
+        console.error('Error loading profiles:', error);
+      }
+    });
+  }
+
+  private loadEstablishments(): void {
+    this.hemocentroService.getEstabelecimento().subscribe({
+      next: (response) => {
+        console.log('Resposta da API 2:', response);
+        this.establishments = response || [];
+      },
+      error: (error) => {
+        console.error('Error loading establishments:', error);
+      }
     });
   }
 

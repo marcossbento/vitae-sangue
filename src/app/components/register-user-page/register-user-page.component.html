@@ -90,7 +90,13 @@
 
         <div class="p-field">
           <label for="perfil">Perfil</label>
-          <p-dropdown id="perfil" formControlName="perfil" [options]="perfilOptions" optionLabel="label" placeholder="Selecione o perfil" />
+          <p-dropdown id="perfil" formControlName="perfil" [options]="profiles" optionLabel="nome" optionValue="id" placeholder="Selecione o perfil" >
+          
+            <ng-template pTemplate="empty">
+              Nenhum perfil disponível
+            </ng-template>
+          
+          </p-dropdown>
           <small class="p-error" *ngIf="registerForm.get('perfil')?.invalid && registerForm.get('perfil')?.touched">
             Perfil é obrigatório
           </small>
@@ -98,7 +104,7 @@
 
         <div class="p-field">
           <label for="estabelecimento">Estabelecimento</label>
-          <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="estabelecimentoOptions" optionLabel="label" placeholder="Selecione o estabelecimento" />
+          <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="establishments" optionLabel="nome" placeholder="Selecione o estabelecimento" />
           <small class="p-error" *ngIf="registerForm.get('estabelecimento')?.invalid && registerForm.get('estabelecimento')?.touched">
             Estabelecimento é obrigatório
           </small>
