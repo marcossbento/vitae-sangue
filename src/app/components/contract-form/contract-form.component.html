@@ -6,7 +6,7 @@
         <img src="../../../assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue">
       </div>
 
-      <h3>Formulário de Exemplo</h3>
+      <h3>Formulário de Contrato</h3>
 
       <ul class="step-list">
         @for (step of steps; track step.label; let i = $index) {
@@ -23,27 +23,21 @@
       <h2>{{steps[currentStep].label}}</h2>
 
       <form [formGroup]="formGroup">
-        
+
         <!-- Hospital e Usuário Requeridos -->
         @if (currentStep === 0) {
         <div formGroupName="dadosRequeridos" class="form-fields">
           <div class="p-field">
             <label for="hemocentro">Hemocentro requerido</label>
-            <p-dropdown id="hemocentro" formControlName="hemocentro" [options]="hemocentros" optionLabel="estabelecimento.nome"
-              placeholder="Selecione o tipo" [showClear]="true">
-              
+            <p-dropdown id="hemocentro" formControlName="hemocentro" [options]="hemocentros"
+              optionLabel="estabelecimento.nome" placeholder="Selecione o tipo" [showClear]="true">
+
               <ng-template pTemplate="empty">
                 Nenhum hemocentro encontrado
               </ng-template>
 
             </p-dropdown>
           </div>
-          <div class="p-field">
-            <label for="usuarioRequerido">Usuário requerido</label>
-            <p-dropdown id="usuarioRequerido" formControlName="usuarioRequerido" [options]="usuarioRequerido"
-              optionLabel="label" placeholder="Selecione o usuário" />
-          </div>
-
         </div>
         }
 
@@ -53,6 +47,10 @@
           <div class="field">
             <label>Data de Início</label>
             <p-calendar formControlName="dataInicio" />
+            <!-- Mensagem de erro -->
+            @if (formGroup.get('dataQuantidade')?.hasError('dateRange')) {
+            <small class="p-error">A data de início não pode ser posterior à data de vencimento.</small>
+            }
           </div>
           <div class="field">
             <label>Data de vencimento</label>

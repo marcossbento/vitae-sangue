@@ -102,11 +102,16 @@
       .p-field {
         display: flex;
         flex-direction: column;
+        width: 50%;
       }
 
       ::ng-deep p-dropdown {
         border: 1px solid $primary-color;
         border-radius: 4px;
+
+        .p-component {
+          width: 100%;
+        }
 
         .p-dropdown-label {
           padding: 0.5rem;
@@ -129,8 +134,22 @@
         }
       }
 
+      ::ng-deep p-calendar {
+        border-radius: 4px;
+
+        .p-datepicker {
+          background-color: $primary-color;
+          color: $off-white;
+          padding: 4px;
+          border-radius: 4px;
+        }
+      }
+
       .field {
         margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        width: 33%;
 
         label {
           display: block;
@@ -147,9 +166,13 @@
 
           &:focus {
             outline: none;
-            border-color: #8B0000;
+            border-color: $primary-color;
             box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
           }
+        }
+
+        small {
+          color: #dc3545;
         }
       }
 

@@ -11,17 +11,6 @@ export class HemocentroService {
   constructor(private http: HttpClient) { }
 
   getHemocentros(): Observable<any> {
-    // 👇 Recupera o token do localStorage
-    const token = localStorage.getItem('authToken');
-
-    if (!token) {
-      throw new Error('Token não encontrado! Faça login novamente.');
-    }
-
-    // Configura o cabeçalho com o token
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
 
     // Traz todos os registros em uma única página
     const params = new HttpParams()
