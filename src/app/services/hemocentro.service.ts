@@ -20,4 +20,9 @@ export class HemocentroService {
     return this.http.get(`${this.apiUrl}/hemocentro`, { params });
   }
 
+  getHemocentrosParceiros(estabelecimentoId: number): Observable<any> {
+
+    return this.http.get(`${this.apiUrl}/hemocentro/parceiros/${estabelecimentoId}`);
+  }
+
 }
