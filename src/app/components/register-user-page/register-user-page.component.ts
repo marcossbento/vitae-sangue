@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RegisterService } from '../../services/register.service';
 import { ProfileService } from '../../services/profile.service';
 import { HemocentroService } from '../../services/hemocentro.service';
+import { EstablishmentService } from '../../services/establishment.service';
 
 @Component({
   selector: 'app-register-user-page',
@@ -43,7 +44,9 @@ export class RegisterUserPageComponent {
     private router: Router,
     private registerService: RegisterService,
     private profileService: ProfileService,
-    private hemocentroService: HemocentroService
+    private hemocentroService: HemocentroService,
+    private establishmentService: EstablishmentService
+
   ) {
     this.initForm();
   }
@@ -71,7 +74,7 @@ export class RegisterUserPageComponent {
   }
 
   private loadEstablishments(): void {
-    this.hemocentroService.getEstabelecimento().subscribe({
+    this.establishmentService.getEstabelecimento().subscribe({
       next: (response) => {
         console.log('Resposta da API 2:', response);
         this.establishments = response || [];
