@@ -92,7 +92,6 @@
       display: flex;
       justify-content: center;
       gap: 2rem;
-      max-width: 600px;
       background-color: $off-white;
       padding: 2rem;
       border-radius: 8px;
@@ -108,25 +107,25 @@
       ::ng-deep p-dropdown {
         border: 1px solid $primary-color;
         border-radius: 4px;
-      
+
         .p-component {
           width: 100%;
         }
-      
+
         .p-dropdown-label {
           padding: 0.5rem;
         }
-      
+
         .p-dropdown-panel {
           max-height: 300px; /* Ajuste a altura máxima conforme necessário */
           overflow-y: auto; /* Permite rolar as opções quando ultrapassam o tamanho */
-          
+
           .p-dropdown-items {
             padding: 0.5rem;
             background-color: $primary-color;
             color: $off-white;
             border-radius: 0 0 4px 4px;
-      
+
             li {
               &:hover {
                 background-color: $secondary-color;
@@ -135,7 +134,7 @@
           }
         }
       }
-      
+
 
       ::ng-deep p-calendar {
         border-radius: 4px;

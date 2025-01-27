@@ -1,3 +1,4 @@
+import { UserAuthenticatedService } from './../../services/user-authenticated.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormGroupName, Validators } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -13,9 +14,9 @@ import { RequisitionService } from '../../services/requisition.service';
   styleUrls: ['./requisition-form.component.scss'],
   standalone: true,
   imports: [
-    ButtonModule, 
-    ReactiveFormsModule, 
-    DropdownModule, 
+    ButtonModule,
+    ReactiveFormsModule,
+    DropdownModule,
     InputNumberModule],
 })
 export class RequisitionFormComponent implements OnInit {
@@ -23,6 +24,7 @@ export class RequisitionFormComponent implements OnInit {
   currentStep: number = 0;
   hemocentros: any[] = [];
   selectedHemocentro: any;
+  usuarioLogado: any;
   hemocomponentes: any[] = [
     { label: 'Hemácias', value: 'HEMACIAS' },
     { label: 'Plasma', value: 'PLASMA' },
@@ -41,10 +43,10 @@ export class RequisitionFormComponent implements OnInit {
 
   steps = [
     { label: 'Hemocentro', icon: 'pi pi-building', completed: false, formGroupName: 'dadosHemocentro'},
-    { label: 'Detalhes da Requisição', icon: 'pi pi-info-circle', completed: false, formGroupName: 'dadosRequeridos' },
+    { label: 'Detalhes da Requisição', icon: 'pi pi-info-circle', completed: false, formGroupName: 'dadosRequisicao' },
   ];
 
-  constructor(private fb: FormBuilder, private hemocentroService: HemocentroService, private requisitionService: RequisitionService) {
+  constructor(private fb: FormBuilder, private hemocentroService: HemocentroService, private requisitionService: RequisitionService, private userAuthenticatedService: UserAuthenticatedService) {
     this.formGroup = this.fb.group({
       dadosHemocentro: this.fb.group({
         hemocentro: ['', Validators.required]
@@ -56,6 +58,19 @@ export class RequisitionFormComponent implements OnInit {
         qtdRequirida: ['', Validators.required],
       }),
     });
+    this.loadUser();
+  }
+
+  private loadUser(): void{
+    this.userAuthenticatedService.getUserLogado().subscribe({
+      next: (response) => {
+        console.log('Resposta da API:', response);
+        this.usuarioLogado = response;
+      },
+      error: (error) => {
+        console.error('Error loading establishments:', error);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -63,9 +78,10 @@ export class RequisitionFormComponent implements OnInit {
   }
 
   carregarHemocentros(): void {
-    this.hemocentroService.getHemocentros().subscribe({
+    this.hemocentroService.getHemocentrosParceiros(this.usuarioLogado.estabelecimento.id).subscribe({
       next: (response) => {
-        this.hemocentros = response.content || []; 
+        console.log(response);
+        this.hemocentros = response || [];
       },
       error: (err) => console.error('Erro ao carregar:', err)
     });
@@ -79,7 +95,7 @@ export class RequisitionFormComponent implements OnInit {
 
   nextStep() {
     const currentStepGroup = this.formGroup.get(this.steps[this.currentStep].formGroupName);
-    
+
     if (currentStepGroup?.valid) {
       if (this.currentStep === this.steps.length - 1) {
         this.submitRequisition(); // Chama o método de envio no último passo
@@ -98,8 +114,8 @@ export class RequisitionFormComponent implements OnInit {
 
   goToStep(index: number) {
     // Só permite navegar para steps já completados ou o próximo
-    if (index < this.currentStep || 
-        index === this.currentStep || 
+    if (index < this.currentStep ||
+        index === this.currentStep ||
         (index === this.currentStep + 1 && this.steps[this.currentStep].completed)) {
       this.currentStep = index;
     }
@@ -113,12 +129,19 @@ export class RequisitionFormComponent implements OnInit {
   private submitRequisition() {
     const formData = this.formGroup.value;
 
+
+
+    console.log('TESTETESTETESTETESTETESTETESTETESTE');
+
     const payload = {
-      hemocentro: formData.dadosHemocentro.hemocentro.id,
+      hemocentroId: formData.dadosHemocentro.hemocentro.id,
       situacao: "PENDENTE",
-      hemocomponentes: formData.dadosRequisicao.hemocomponente,
-      tiposAbo: formData.dadosRequisicao.abo,
-      fatoresRh: formData.dadosRequisicao.rh
+      bolsas: [{
+        hemocomponente: formData.dadosRequisicao.hemocomponente,
+        abo: formData.dadosRequisicao.abo,
+        rh: formData.dadosRequisicao.rh,
+        qtdRequerida: formData.dadosRequisicao.qtdRequerida
+      }]
     };
 
     this.requisitionService.createRequisicao(payload).subscribe({
