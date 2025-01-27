@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="content-table">
-        <p-table [value]="tableData" [columns]="tableColumns" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table [value]="tableData" [columns]="tableColumns" [tableStyle]="{ 'min-width': '70rem' }">
             <ng-template pTemplate="header">
                 <tr>
                     <th *ngFor="let col of tableColumns">
@@ -25,7 +25,14 @@
             <ng-template pTemplate="body" let-rowData>
                 <tr>
                     <td *ngFor="let col of tableColumns">
-                        {{rowData[col.field]}}
+                        <ng-container *ngIf="col.field === 'status'">
+                            <span [class]="'status-badge ' + rowData[col.field].toLowerCase()">
+                                {{rowData[col.field]}}
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="col.field !== 'status'">
+                            {{rowData[col.field]}}
+                        </ng-container>
                     </td>
                 </tr>
             </ng-template>

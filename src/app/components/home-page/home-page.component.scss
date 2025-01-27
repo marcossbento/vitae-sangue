@@ -36,7 +36,6 @@
 
             &:hover {
                 background-color: $secondary-color;
-                transform: translateY(-5px);
             }
 
             img {
@@ -62,6 +61,27 @@
     ::ng-deep .content-table {
         margin-top: 20px;
         padding: 0 3rem;
+
+        .status-badge {
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          
+          &.pendente {
+            background-color: #fff3cd;
+            color: #856404;
+          }
+          
+          &.aprovada {
+            background-color: #d4edda;
+            color: #155724;
+          }
+          
+          &.recusada {
+            background-color: #f8d7da;
+            color: #721c24;
+          }
+        }
       
         p-table {
 

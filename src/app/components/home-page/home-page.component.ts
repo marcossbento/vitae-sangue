@@ -4,6 +4,7 @@ import { HeaderComponent } from "../header/header.component";
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ContractService } from '../../services/contract.service';
+import { RequisitionService } from '../../services/requisition.service';
 
 @Component({
   selector: 'app-home-page',
@@ -25,7 +26,7 @@ export class HomePageComponent implements OnInit {
   tableData: any[] = [];
   tableColumns: any[] = [];
 
-  constructor(private contractService: ContractService) {
+  constructor(private contractService: ContractService, private requisitionService: RequisitionService) {
     this.user = {
       name: 'Usuário'
     }
@@ -44,10 +45,13 @@ export class HomePageComponent implements OnInit {
 
   onCardClick(cardTitle: string): void {
     this.selectedCard = cardTitle;
-    
-    switch(cardTitle) {
+
+    switch (cardTitle) {
       case 'Contratos':
         this.loadContracts();
+        break;
+      case 'Requisições de bolsas':
+        this.loadRequisicoes();
         break;
       // Adicionar casos para os outros cards posteriormente
     }
@@ -63,21 +67,59 @@ export class HomePageComponent implements OnInit {
           status: contract.situacao,
           expiration: contract.vencimento
         }));
-        
-        this.updateTableColumns();
+
+        this.updateTableColumns('contratos');
       },
       error: (err) => console.error('Erro ao carregar contratos:', err)
     });
   }
 
-  private updateTableColumns(): void {
-    this.tableColumns = [
-      { field: 'requisitionType', header: 'Tipo de Requisição' },
-      { field: 'requester', header: 'Requisitante' },
-      { field: 'quantity', header: 'Quantidade (ml)' },
-      { field: 'status', header: 'Situação' },
-      { field: 'expiration', header: 'Vencimento' }
-    ];
+  private loadRequisicoes(): void {
+    this.requisitionService.getRequisicoes().subscribe({
+      next: (response) => {
+        this.tableData = response.content.map((requisicao: any) => ({
+          requisitionType: 'Requisição de Bolsas',
+          requester: requisicao.hospital.nome,
+          quantidade: this.calculateTotalBags(requisicao.bolsas),
+          componentes: this.getComponentsList(requisicao.bolsas),
+          status: requisicao.situacao,
+          hemocentro: requisicao.hemocentro.nome
+        }));
+        
+        this.updateTableColumns('requisicoes');
+      },
+      error: (err: any) => console.error('Erro ao carregar requisições:', err)
+    });
+  }
+
+  private calculateTotalBags(bolsas: any[]): number {
+    return bolsas.reduce((total, bolsa) => total + bolsa.qtdRequirida, 0);
+  }
+
+  private getComponentsList(bolsas: any[]): string {
+    return bolsas.map(b => `${b.hemocomponente} (${b.qtdRequirida})`).join(', ');
+  }
+
+  private updateTableColumns(dataType: string): void {
+    if(dataType === 'contratos') {
+      this.tableColumns = [
+        { field: 'requisitionType', header: 'Tipo de Requisição' },
+        { field: 'requester', header: 'Requisitante' },
+        { field: 'quantity', header: 'Quantidade (ml)' },
+        { field: 'status', header: 'Situação' },
+        { field: 'expiration', header: 'Vencimento' }
+      ];
+    }
+    else if(dataType === 'requisicoes') {
+      this.tableColumns = [
+        { field: 'requisitionType', header: 'Tipo' },
+        { field: 'requester', header: 'Hospital' },
+        { field: 'quantidade', header: 'Total de Bolsas' },
+        { field: 'componentes', header: 'Hemocomponentes' },
+        { field: 'status', header: 'Status' },
+        { field: 'hemocentro', header: 'Hemocentro' }
+      ];
+    }
   }
 
 }
