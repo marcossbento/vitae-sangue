@@ -5,28 +5,28 @@
         <p>Contratos, requisições e envios de bolsas.</p>
     </div>
     <div class="pending-cards-container">
-        <div class="pending-card-item" *ngFor="let cardItem of cardItems">
+        <div class="pending-card-item" *ngFor="let cardItem of cardItems" (click)="onCardClick(cardItem.title)"  [class.selected]="selectedCard === cardItem.title">
             <img src={{cardItem.image}} alt="">
             <div class="pending-card-item-text">
                 <h2>{{cardItem.title}}</h2>
-                <p>{{cardItem.pendingNumber}} pendente(s)</p>
+                <p>👆Clique para visualizar {{cardItem.pPhrase}}</p>
             </div>
         </div>
     </div>
     <div class="content-table">
-        <p-table [value]="requisition" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table [value]="tableData" [columns]="tableColumns" [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Tipo de Requisição</th>
-                    <th>Requisitante</th>
-                    <th>Category</th>
-                    <th>Quantity</th>
+                    <th *ngFor="let col of tableColumns">
+                        {{col.header}}
+                    </th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-requisition>
+            <ng-template pTemplate="body" let-rowData>
                 <tr>
-                    <td>{{ requisition.requisitionType }}</td>
-                    <td>{{ requisition.requester }}</td>
+                    <td *ngFor="let col of tableColumns">
+                        {{rowData[col.field]}}
+                    </td>
                 </tr>
             </ng-template>
         </p-table>

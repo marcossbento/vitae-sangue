@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from "../header/header.component";
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import { ContractService } from '../../services/contract.service';
 
 @Component({
   selector: 'app-home-page',
@@ -12,33 +13,72 @@ import { CommonModule } from '@angular/common';
     HeaderComponent,
     TableModule,
     CommonModule
-],
+  ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
 })
-export class HomePageComponent {
-user: any;
-cardItems: any[];
-requisition: any[];
+export class HomePageComponent implements OnInit {
+  user: any;
+  cardItems: any[];
 
-constructor () {
-  this.user = {
-    name: 'Usuário'
+  selectedCard: string = '';
+  tableData: any[] = [];
+  tableColumns: any[] = [];
+
+  constructor(private contractService: ContractService) {
+    this.user = {
+      name: 'Usuário'
+    }
+
+    this.cardItems = [
+      { title: 'Contratos', pPhrase: 'os contratos', image: '../../assets/images/contratos.webp' },
+      { title: 'Requisições de bolsas', pPhrase: 'as requisições de bolsa', image: '../../assets/images/bolsasDeSangue.webp' },
+      { title: 'Envio de bolsas', pPhrase: 'os envios de bolsa', image: '../../assets/images/bolsasDeSangue.webp' }
+    ];
+
   }
 
-  this.cardItems = [
-    {title: 'Contratos', pendingNumber: '4 contratos', image: '../../assets/images/contratos.webp'},
-    {title: 'Requisições de bolsas', pendingNumber: '6 requisições', image: '../../assets/images/bolsasDeSangue.webp'},
-    {title: 'Envio de bolsas', pendingNumber: '1 envio', image: '../../assets/images/bolsasDeSangue.webp'}
-  ];
+  ngOnInit(): void {
+    this.loadContracts(); // Carrega contratos inicialmente
+  }
 
-  this.requisition = [
-    {requisitionType: 'Contratos', requester: 'Hospital 1'},
-    {requisitionType: 'Requisições de bolsas', requester: 'Hospital 2'},
-    {requisitionType: 'Envio de bolsas', requester: 'Hospital 3'}
-  ];
+  onCardClick(cardTitle: string): void {
+    this.selectedCard = cardTitle;
+    
+    switch(cardTitle) {
+      case 'Contratos':
+        this.loadContracts();
+        break;
+      // Adicionar casos para os outros cards posteriormente
+    }
+  }
 
-}
+  private loadContracts(): void {
+    this.contractService.getContracts().subscribe({
+      next: (response) => {
+        this.tableData = response.content.map((contract: any) => ({
+          requisitionType: 'Contrato',
+          requester: contract.hospital.nome,
+          quantity: contract.quantidadeSangue,
+          status: contract.situacao,
+          expiration: contract.vencimento
+        }));
+        
+        this.updateTableColumns();
+      },
+      error: (err) => console.error('Erro ao carregar contratos:', err)
+    });
+  }
+
+  private updateTableColumns(): void {
+    this.tableColumns = [
+      { field: 'requisitionType', header: 'Tipo de Requisição' },
+      { field: 'requester', header: 'Requisitante' },
+      { field: 'quantity', header: 'Quantidade (ml)' },
+      { field: 'status', header: 'Situação' },
+      { field: 'expiration', header: 'Vencimento' }
+    ];
+  }
 
 }
 

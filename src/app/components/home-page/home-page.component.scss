@@ -29,6 +29,11 @@
             transition: all 0.3s ease;
             cursor: pointer;
 
+            &.selected {
+              transform: translateY(-10px);
+              border: 2px solid ;
+            }
+
             &:hover {
                 background-color: $secondary-color;
                 transform: translateY(-5px);
