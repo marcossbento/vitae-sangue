@@ -44,7 +44,7 @@ export class RegisterPageComponent {
 
   tipoHospital: any[] = [
     { label: 'Público', value: 'PUBLICO' },
-    { label: 'Particular', value: 'PARTICULAR' },
+    { label: 'Privado', value: 'PRIVADO' },
     { label: 'Filantrópico', value: 'FILANTROPICO' }
   ];
 
