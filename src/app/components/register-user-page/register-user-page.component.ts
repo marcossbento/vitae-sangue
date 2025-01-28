@@ -11,8 +11,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterService } from '../../services/register.service';
 import { ProfileService } from '../../services/profile.service';
-import { HemocentroService } from '../../services/hemocentro.service';
+import { UserService } from '../../services/user.service';
 import { EstablishmentService } from '../../services/establishment.service';
+import { UserAuthenticatedService } from '../../services/user-authenticated.service';
 
 @Component({
   selector: 'app-register-user-page',
@@ -39,26 +40,44 @@ export class RegisterUserPageComponent {
 
   establishments: any[]= [];
 
+  shouldShowEstabelecimento: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private registerService: RegisterService,
     private profileService: ProfileService,
-    private hemocentroService: HemocentroService,
-    private establishmentService: EstablishmentService
-
+    private establishmentService: EstablishmentService,
+    private userAuthenticatedService: UserAuthenticatedService,
+    private userService: UserService
   ) {
     this.initForm();
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.loadProfiles();
-    this.loadEstablishments();
+    await this.verificaPermisaso();
+
+    if(this.shouldShowEstabelecimento){
+      this.loadEstablishments();
+      console.log("teste")
+    }
+
     const perfilControl = this.registerForm.get('perfil');
     console.log('Valor inicial perfil:', perfilControl?.value);  // Verifique o valor inicial
     perfilControl?.valueChanges.subscribe((value) => {
       console.log('Novo valor de perfil:', value);  // Verifique se o valueChanges está sendo disparado corretamente
     });
+  }
+
+  async verificaPermisaso() {
+    var userAuthenticated = await this.userAuthenticatedService.getUserLogado()
+
+    if (userAuthenticated.isAdmin) {
+      this.shouldShowEstabelecimento = true;
+    } else {
+      this.shouldShowEstabelecimento = false;
+    }
+
   }
 
   private loadProfiles(): void {
@@ -108,10 +127,11 @@ export class RegisterUserPageComponent {
     if (this.registerForm.valid) {
       // Mapear os campos do formulário para o formato da requisição
       const requestBody = {
+        id: 0,
         nome: this.registerForm.get('nome')?.value,
         email: this.registerForm.get('email')?.value,
         senha: this.registerForm.get('senha')?.value,
-        cpf: this.registerForm.get('cpf')?.value,
+        cpf: this.registerForm.get('cpf')?.value.replace(/\D/g, ''),
         endereco: {
           cep: this.registerForm.get('cep')?.value,
           estado: this.registerForm.get('estado')?.value,
@@ -121,18 +141,22 @@ export class RegisterUserPageComponent {
           numero: this.registerForm.get('numero')?.value,
         },
         telefones: [{
+          id: 0,
           ddd: parseInt(this.registerForm.get('telefone')?.value.slice(1, 3), 10),
-          numero: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10)
+          numero: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10),
+          descricao: 'Contato de usuario', 
+          whatsapp: true
         }],
-        perfil: this.registerForm.get('perfil')?.value, // Enum ou valor do perfil
-        estabelecimento: this.registerForm.get('estabelecimento')?.value, // Estabelecimento associado ao usuário
+        perfilId: this.registerForm.get('perfil')?.value, 
+        estabelecimentoId: this.shouldShowEstabelecimento ? this.registerForm.get('estabelecimento')?.value.id : 0
       };
+      console.log(requestBody);
 
       // Enviar o corpo da requisição ao serviço
-      this.registerService.register(requestBody).subscribe(
+      this.userService.createUser(requestBody).subscribe(
         (response) => {
           console.log('Registro realizado com sucesso:', response);
-          this.router.navigate(['login']);
+          this.router.navigate(['home']);
         },
         (error) => {
           console.error('Erro ao realizar registro:', error);

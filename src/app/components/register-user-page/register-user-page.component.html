@@ -57,6 +57,14 @@
         </div>
 
         <div class="p-field">
+          <label for="numero">Numero</label>
+          <input pInputText id="numero" formControlName="numero" />
+          <small class="p-error" *ngIf="registerForm.get('numero')?.invalid && registerForm.get('numero')?.touched">
+            Numero é obrigatório
+          </small>
+        </div>
+
+        <div class="p-field">
           <label for="bairro">Bairro</label>
           <input pInputText id="bairro" formControlName="bairro" />
           <small class="p-error" *ngIf="registerForm.get('bairro')?.invalid && registerForm.get('bairro')?.touched">
@@ -91,22 +99,29 @@
         <div class="p-field">
           <label for="perfil">Perfil</label>
           <p-dropdown id="perfil" formControlName="perfil" [options]="profiles" optionLabel="nome" optionValue="id" placeholder="Selecione o perfil" >
-          
+
             <ng-template pTemplate="empty">
               Nenhum perfil disponível
             </ng-template>
-          
+
           </p-dropdown>
           <small class="p-error" *ngIf="registerForm.get('perfil')?.invalid && registerForm.get('perfil')?.touched">
             Perfil é obrigatório
           </small>
         </div>
 
-        <div class="p-field">
+        <div class="p-field" *ngIf="shouldShowEstabelecimento">
           <label for="estabelecimento">Estabelecimento</label>
-          <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="establishments" optionLabel="nome" placeholder="Selecione o estabelecimento" />
+          <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="establishments"
+            optionLabel="nome" placeholder="Selecione o tipo" [showClear]="true">
+
+            <ng-template pTemplate="empty">
+              Nenhum estabelecimento encontrado
+            </ng-template>
+
+          </p-dropdown>
           <small class="p-error" *ngIf="registerForm.get('estabelecimento')?.invalid && registerForm.get('estabelecimento')?.touched">
-            Estabelecimento é obrigatório
+            O estabelecimento é obrigatório.
           </small>
         </div>
 
