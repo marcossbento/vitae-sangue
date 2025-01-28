@@ -24,7 +24,6 @@ export class RequisitionFormComponent implements OnInit {
   currentStep: number = 0;
   hemocentros: any[] = [];
   selectedHemocentro: any;
-  usuarioLogado: any;
   hemocomponentes: any[] = [
     { label: 'Hemácias', value: 'HEMACIAS' },
     { label: 'Plasma', value: 'PLASMA' },
@@ -58,27 +57,16 @@ export class RequisitionFormComponent implements OnInit {
         qtdRequirida: ['', Validators.required],
       }),
     });
-    this.loadUser();
-  }
-
-  private loadUser(): void{
-    this.userAuthenticatedService.getUserLogado().subscribe({
-      next: (response) => {
-        console.log('Resposta da API:', response);
-        this.usuarioLogado = response;
-      },
-      error: (error) => {
-        console.error('Error loading establishments:', error);
-      }
-    });
   }
 
   ngOnInit(): void {
     this.carregarHemocentros();
   }
 
-  carregarHemocentros(): void {
-    this.hemocentroService.getHemocentrosParceiros(this.usuarioLogado.estabelecimento.id).subscribe({
+  async carregarHemocentros() {
+    var userAuthenticated = await this.userAuthenticatedService.getUserLogado()
+
+    this.hemocentroService.getHemocentrosParceiros(userAuthenticated.estabelecimento.id).subscribe({
       next: (response) => {
         console.log(response);
         this.hemocentros = response || [];
@@ -128,11 +116,7 @@ export class RequisitionFormComponent implements OnInit {
 
   private submitRequisition() {
     const formData = this.formGroup.value;
-
-
-
-    console.log('TESTETESTETESTETESTETESTETESTETESTE');
-
+    
     const payload = {
       hemocentroId: formData.dadosHemocentro.hemocentro.id,
       situacao: "PENDENTE",

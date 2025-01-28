@@ -1,37 +1,44 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserAuthenticatedService {
   private apiUrl = 'http://localhost:8080';
-  private userKey = 'userLogado'; // Chave para armazenar o usuário no localStorage
+  private userSubject = new BehaviorSubject<any>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.fetchUser();
+  }
 
-  getUserLogado(): Observable<any> {
-    // Verifica se o usuário está armazenado no localStorage
-    const cachedUser = localStorage.getItem(this.userKey);
-    if (cachedUser) {
-      console.log('Usuário em cache: ', JSON.parse(cachedUser));
-      return of(JSON.parse(cachedUser)); // Retorna os dados do usuário armazenados no localStorage
+  private async fetchUser(): Promise<void> {
+    console.log('Fetching user data...');
+    try {
+      const user = await this.http.get<any>(`${this.apiUrl}/usuario/logado`)
+        .pipe(
+          catchError((error) => {
+            console.error('Error fetching user:', error);
+            return [];
+          })
+        )
+        .toPromise();
+      this.userSubject.next(user || null);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      this.userSubject.next(null);
     }
+  }
 
-    // Caso contrário, faz a requisição à API para buscar o usuário
-    return this.http.get('http://localhost:8080/usuario/logado').pipe(
-      map((response: any) => {
-        // Armazena o usuário no localStorage após a requisição
-        localStorage.setItem(this.userKey, JSON.stringify(response));
-        console.log('Usuário carregado da API: ', response);
-        return response;
-      }),
-      catchError((error) => {
-        console.error('Erro ao buscar o usuário logado: ', error);
-        throw error; // Ou trate o erro de outra forma
-      })
-    );
+  async getUserLogado(): Promise<any> {
+    // Aguarda o carregamento dos dados do usuário
+    await this.fetchUser();
+    return this.userSubject.value;
+  }
+
+  refreshUser(): void {
+    this.fetchUser();
   }
 }
