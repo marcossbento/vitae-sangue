@@ -2,12 +2,12 @@
     <div class="register-profile-container">
       <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
       <h1>Gerenciamento de Perfis - <span>VitaeSangue</span></h1>
-      <h2>Formulário de Registro de Perfil</h2>
+      <h2>Formulário de Edicao de Perfil</h2>
       <h3>Preencha os detalhes abaixo</h3>
-  
+
       <form [formGroup]="registerProfileForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
-  
+
           <div class="p-field">
             <label for="nome">Nome do Perfil</label>
             <input pInputText id="nome" formControlName="nome" />
@@ -15,16 +15,16 @@
               O nome do perfil é obrigatório e deve ter entre 3 e 100 caracteres.
             </small>
           </div>
-  
+
           <div class="p-field" *ngIf="shouldShowEstabelecimento">
             <label for="estabelecimento">Estabelecimento</label>
             <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="estabelecimentoOptions"
               optionLabel="nome" placeholder="Selecione o tipo" [showClear]="true">
-    
+
               <ng-template pTemplate="empty">
                 Nenhum estabelecimento encontrado
               </ng-template>
-    
+
             </p-dropdown>
             <small class="p-error" *ngIf="registerProfileForm.get('estabelecimento')?.invalid && registerProfileForm.get('estabelecimento')?.touched">
               O estabelecimento é obrigatório.
@@ -33,6 +33,7 @@
 
           <div class="permission-container">
             <div *ngFor="let permission of permissions">
+              <input type="hidden" formControlName="{{ permission }}_id"/>
               <label class="permission-label">{{ permission }}</label>
               <div class="checkbox-group">
                 <label class="checkbox-container">
@@ -50,9 +51,9 @@
               </div>
             </div>
           </div>
-          
+
         </div>
-  
+
         <div class="button-container">
           <button pButton type="button" label="Voltar" (click)="onBack()" routerLink="/profile-list">Voltar</button>
           <button pButton type="submit" label="Registrar Perfil">Registrar Perfil</button>
@@ -60,4 +61,3 @@
       </form>
     </div>
   </section>
-  

@@ -22,4 +22,16 @@ export class ProfileService {
       map(response => response.content) // Extrai o array de perfis
     );
   }
+
+  createProfile(dadosRequisicao: any) {
+    return this.http.post(this.apiUrl, dadosRequisicao);
+  }
+
+  updateProfile(dadosRequisicao: any) {
+    return this.http.put(this.apiUrl, dadosRequisicao);
+  }
+
+  getProfile(id: any) {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
 }

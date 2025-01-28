@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,29 +16,30 @@ import { EstablishmentService } from './../../services/establishment.service';
 import { ProfileService } from '../../services/profile.service';
 
 @Component({
-  selector: 'app-register-profile-page',
+  selector: 'app-edit-profile-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    InputTextModule,
-    FloatLabelModule,
-    InputNumberModule,
-    FormsModule,
-    InputMaskModule,
-    DropdownModule,
-    HttpClientModule,
-    MultiSelectModule,
-    CheckboxModule,
-  ],
-  templateUrl: './register-profile-page.component.html',
-  styleUrls: ['./register-profile-page.component.scss'],
+    imports: [
+      CommonModule,
+      ReactiveFormsModule,
+      RouterModule,
+      InputTextModule,
+      FloatLabelModule,
+      InputNumberModule,
+      FormsModule,
+      InputMaskModule,
+      DropdownModule,
+      HttpClientModule,
+      MultiSelectModule,
+      CheckboxModule,
+    ],
+  templateUrl: './edit-profile-page.component.html',
+  styleUrl: './edit-profile-page.component.scss'
 })
-export class RegisterProfilePageComponent {
+export class EditProfilePageComponent {
   registerProfileForm!: FormGroup;
 
   estabelecimentoOptions: any[] = [ ];
+
 
   permissions = [
     'USUARIO', 'BOLSA_REQUISICAO', 'BOLSA_ENTREGA', 'CONTRATO',
@@ -48,17 +49,20 @@ export class RegisterProfilePageComponent {
 
   shouldShowEstabelecimento: boolean = false;
 
+  profileId: any ;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private profileService: ProfileService,
     private userAuthenticatedService: UserAuthenticatedService,
-    private establishmentService: EstablishmentService
-
+    private establishmentService: EstablishmentService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void  {
     const permissionControls: { [key: string]: any } = {};
+    this.profileId = this.route.snapshot.paramMap.get('id');
 
     this.carregarEstabelecimentos()
     this.verificaPermisaso()
@@ -67,6 +71,7 @@ export class RegisterProfilePageComponent {
       permissionControls[`${permission}_criar`] = [false];
       permissionControls[`${permission}_editar`] = [false];
       permissionControls[`${permission}_deletar`] = [false];
+      permissionControls[`${permission}_id`] = [null];
     });
 
     this.registerProfileForm = this.fb.group({
@@ -74,6 +79,10 @@ export class RegisterProfilePageComponent {
       estabelecimento: ['0'],
       ...permissionControls
     });
+
+    if (this.profileId) {
+      this.loadProfile(this.profileId);
+    }
   }
 
   async verificaPermisaso() {
@@ -88,8 +97,6 @@ export class RegisterProfilePageComponent {
   }
 
   carregarEstabelecimentos() {
-    var userAuthenticated =  this.userAuthenticatedService.getUserLogado()
-
     this.establishmentService.getEstabelecimento().subscribe({
       next: (response) => {
         this.estabelecimentoOptions = response || [];
@@ -98,15 +105,44 @@ export class RegisterProfilePageComponent {
     });
   }
 
+  loadProfile(profileId: string): void {
+    this.profileService.getProfile(profileId).subscribe({
+      next: (profile) => {
+        let selectedEstabelecimento = null;
+        if (this.shouldShowEstabelecimento) {
+          selectedEstabelecimento = this.estabelecimentoOptions.find(estab => estab.id === profile.estabelecimento.id) || null;
+        }
+
+        this.registerProfileForm.patchValue({
+          nome: profile.nome,
+          estabelecimento: selectedEstabelecimento,
+          ...profile.permissoes.reduce((acc: any, perm: any) => {
+            acc[`${perm.controller}_criar`] = perm.criacao;
+            acc[`${perm.controller}_visualizar`] = perm.visualizacao;
+            acc[`${perm.controller}_editar`] = perm.atualizacao;
+            acc[`${perm.controller}_deletar`] = perm.deletar;
+            acc[`${perm.controller}_id`] = perm.id;
+            return acc;
+          }, {}),
+
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao carregar perfil para edição', err);
+      },
+    });
+  }
+
+
   onSubmit(): void {
     console.log('Formulário de perfil enviado:', this.registerProfileForm.value);
     if (this.registerProfileForm.valid) {
       const requestBody = {
-        id: 0,
+        id: this.profileId,
         nome: this.registerProfileForm.get('nome')?.value,
         estabelecimentoId: this.shouldShowEstabelecimento ? this.registerProfileForm.get('estabelecimento')?.value.id : 0,
         permissoes: this.permissions.map(permission => ({
-          id: 0,
+          id: this.registerProfileForm.get(`${permission}_id`)?.value,
           controller: permission,
           criacao: this.registerProfileForm.get(`${permission}_criar`)?.value,
           visualizacao: this.registerProfileForm.get(`${permission}_visualizar`)?.value,
@@ -115,14 +151,14 @@ export class RegisterProfilePageComponent {
         }))
       };
       console.log(requestBody)
-      this.profileService.createProfile(requestBody).subscribe(
+      this.profileService.updateProfile(requestBody).subscribe(
         (response) => {
-          console.log('Perfil registrado com sucesso:', response);
+          console.log('Perfil atualizado com sucesso:', response);
           this.router.navigate(['home']);
         },
         (error) => {
-          console.error('Erro ao registrar perfil:', error);
-          alert('Erro ao registrar o perfil. Por favor, tente novamente.');
+          console.error('Erro ao atualizar perfil:', error);
+          alert('Erro ao atualizar o perfil. Por favor, tente novamente.');
         }
       );
     } else {
