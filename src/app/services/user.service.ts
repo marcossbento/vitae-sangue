@@ -14,4 +14,13 @@ export class UserService {
   createUser(dadosRequisicao: any) {
     return this.http.post(this.apiUrl, dadosRequisicao);
   }
+
+  updateUser(dadosRequisicao: any) {
+    return this.http.put(`${this.apiUrl}/${dadosRequisicao.id}`, dadosRequisicao);
+  }
+
+
+  getUser(id: any) {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
 }

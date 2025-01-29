@@ -8,11 +8,13 @@ import { RegisterUserPageComponent } from './components/register-user-page/regis
 import { RegisterProfilePageComponent } from './components/register-profile-page/register-profile-page.component';
 import { EditProfilePageComponent } from './components/edit-profile-page/edit-profile-page.component';
 import { RequisitionFormComponent } from './components/requisition-form/requisition-form.component';
+import { EditUserPageComponent } from './components/edit-user-page/edit-user-page.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
   { path: 'user/create', component: RegisterUserPageComponent },
+  { path: 'user/edit/:id', component: EditUserPageComponent },
   { path: 'profile/create', component: RegisterProfilePageComponent },
   { path: 'profile/edit/:id', component: EditProfilePageComponent },
   { path: 'home', component: HomePageComponent },
