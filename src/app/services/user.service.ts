@@ -26,4 +26,17 @@ export class UserService {
   getUser(id: any) {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
+
+  getLoggedUser(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/logado`).pipe(
+      map((response: any) => ({
+        id: response.id,
+        name: response.nome || 'Usuário',
+        email: response.email,
+        isAdmin: response.isAdmin,
+        establishment: response.estabelecimento?.nome || 'Estabelecimento não definido',
+        nameFirstLetter: (response.nome?.[0] || 'U').toUpperCase()
+      }))
+    );
+  }
 }
