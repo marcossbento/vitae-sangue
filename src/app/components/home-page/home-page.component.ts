@@ -32,9 +32,9 @@ export class HomePageComponent implements OnInit {
     }
 
     this.cardItems = [
-      { title: 'Contratos', pPhrase: 'os contratos', image: '../../assets/images/contratos.webp' },
-      { title: 'Requisições de bolsas', pPhrase: 'as requisições de bolsa', image: '../../assets/images/bolsasDeSangue.webp' },
-      { title: 'Envio de bolsas', pPhrase: 'os envios de bolsa', image: '../../assets/images/bolsasDeSangue.webp' }
+      { title: 'Contratos', createButtonTitle: 'contrato', pPhrase: 'os contratos', image: '../../assets/images/contratos.webp', link: '/form/contract' },
+      { title: 'Requisições de bolsas', createButtonTitle: 'requisição de bolsa', pPhrase: 'as requisições de bolsa', image: '../../assets/images/bolsasDeSangue.webp', link: '/form/requisition' },
+      { title: 'Envio de bolsas', createButtonTitle: 'envio de bolsa', pPhrase: 'os envios de bolsa', image: '../../assets/images/bolsasDeSangue.webp', link: '' }
     ];
 
   }

@@ -54,6 +54,61 @@
                 p {
                     font-size: 1rem;
                 }
+
+                button {
+                  background: $off-white;
+                  color: $primary-color;
+                  border: none;
+                  border-radius: 8px;
+                  padding: .5rem 1rem;
+                  margin-bottom: 8px;
+                  font-family: 'Segoe UI', sans-serif;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: 
+                      background 0.3s ease,
+                      transform 0.2s ease,
+                      box-shadow 0.3s ease;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 0.8rem;
+                  font-size: 1rem;
+
+                  &:hover {
+                      transform: translateX(6px);
+                      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                  }
+
+                  &:active {
+                      transform: translateY(0);
+                      background: $primary-color;
+                  }
+
+                  /* Ícone opcional (caso queira adicionar) */
+                  &::before {
+                      content: "+";
+                      font-size: 1.2rem;
+                      font-weight: 700;
+                  }
+
+                  /* Container para alinhar os botões */
+
+                  .actions-container {
+                      display: flex;
+                      gap: 1.5rem;
+                      padding: 1rem;
+                      flex-wrap: wrap;
+                  }
+
+                  /* Responsividade */
+                  @media (max-width: 768px) {
+                      button {
+                          width: 100%;
+                          justify-content: center;
+                      }
+                  }
+              }
             }
         }
     }

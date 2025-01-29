@@ -20,8 +20,8 @@ export const routes: Routes = [
   { path: 'profile/create', component: RegisterProfilePageComponent },
   { path: 'profile/edit/:id', component: EditProfilePageComponent },
   { path: 'home', component: HomePageComponent },
-  { path: 'contractForm', component: ContractFormComponent },
-  { path: 'requisitionForm', component: RequisitionFormComponent },
+  { path: 'form/contract', component: ContractFormComponent },
+  { path: 'form/requisition', component: RequisitionFormComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
 
