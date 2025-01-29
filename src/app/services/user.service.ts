@@ -19,6 +19,9 @@ export class UserService {
     return this.http.put(`${this.apiUrl}/${dadosRequisicao.id}`, dadosRequisicao);
   }
 
+  resetPasswordUser(dadosRequisicao: any) {
+    return this.http.put(`${this.apiUrl}/${dadosRequisicao.userId}/alterarsenha`, dadosRequisicao);
+  }
 
   getUser(id: any) {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
