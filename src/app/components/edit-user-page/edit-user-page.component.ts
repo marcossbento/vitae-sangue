@@ -85,13 +85,12 @@ export class EditUserPageComponent {
   }
 
   loadUser(userId: string): void {
-    // Simula a busca de dados do usuário por um serviço (substitua pelo seu UserService)
     this.userService.getUser(userId).subscribe(
       (user) => {
         if (user) {
           this.registerForm.patchValue({
             nome: user.nome,
-            cpf: user.cpf,
+            cpf: this.formatCpf(user.cpf), 
             email: user.email,
             cep: user.endereco.cep,
             logradouro: user.endereco.logradouro,
@@ -99,19 +98,34 @@ export class EditUserPageComponent {
             bairro: user.endereco.bairro,
             cidade: user.endereco.cidade,
             estado: user.endereco.estado,
-            telefone: `${ user.telefones[0].ddd} ${user.telefones[0].numero}`,
-            telefoneId: user.telefones[0].id || null, 
+            telefone: this.formatTelefone(user.telefones[0].ddd, user.telefones[0].numero), 
+            telefoneId: user.telefones[0].id || null,
             perfil: user.perfil.id,
             estabelecimento: user.estabelecimento || null,
           });
         }
-
-        console.log(user);  
+  
+        console.log(user);
       },
       (error) => {
         console.error('Erro ao carregar os dados do usuário:', error);
       }
     );
+  }
+
+  private formatTelefone(ddd: string | number, numero: string | number): string {
+    const telefoneNumerico = numero.toString().replace(/\D/g, '');
+    
+    if (telefoneNumerico.length === 9) {
+      return `(${ddd}) ${telefoneNumerico.slice(0, 5)}-${telefoneNumerico.slice(5)}`;
+    } else {
+      return `(${ddd}) ${telefoneNumerico.slice(0, 4)}-${telefoneNumerico.slice(4)}`;
+    }
+  }
+  
+
+  private formatCpf(cpf: string): string {
+    return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
   }
   
 
