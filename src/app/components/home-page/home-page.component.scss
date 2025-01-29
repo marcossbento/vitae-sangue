@@ -31,7 +31,7 @@
 
             &.selected {
               transform: translateY(-10px);
-              border: 2px solid ;
+              box-shadow: #000000 0px 4px 8px 0px;
             }
 
             &:hover {
