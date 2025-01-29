@@ -5,6 +5,7 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ContractService } from '../../services/contract.service';
 import { RequisitionService } from '../../services/requisition.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-home-page',
@@ -19,14 +20,14 @@ import { RequisitionService } from '../../services/requisition.service';
   styleUrl: './home-page.component.scss'
 })
 export class HomePageComponent implements OnInit {
-  user: any;
+  user: any = { name: 'Carregando...' };
   cardItems: any[];
 
   selectedCard: string = '';
   tableData: any[] = [];
   tableColumns: any[] = [];
 
-  constructor(private contractService: ContractService, private requisitionService: RequisitionService) {
+  constructor(private contractService: ContractService, private requisitionService: RequisitionService, private userService: UserService) {
     this.user = {
       name: 'Usuário'
     }
@@ -40,7 +41,19 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadContracts(); // Carrega contratos inicialmente
+    this.loadUserData();
+    this.loadContracts();
+  }
+
+  private loadUserData(): void {
+    this.userService.getLoggedUser().subscribe({
+      next: (userData) => {
+        this.user = userData;
+      },
+      error: () => {
+        this.user.name = 'Usuário';
+      }
+    });
   }
 
   onCardClick(cardTitle: string): void {
@@ -53,7 +66,7 @@ export class HomePageComponent implements OnInit {
       case 'Requisições de bolsas':
         this.loadRequisicoes();
         break;
-      // Adicionar casos para os outros cards posteriormente
+      // Adicionar caso para entrega de bolsas posrteriormente
     }
   }
 
