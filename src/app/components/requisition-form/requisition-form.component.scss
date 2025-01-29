@@ -90,7 +90,7 @@
 
     .form-fields {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       gap: 2rem;
       background-color: $off-white;
       padding: 2rem;
@@ -101,7 +101,64 @@
       .p-field {
         display: flex;
         flex-direction: column;
-        width: 50%;
+        width: 100%;
+      }
+
+      .bolsa-form {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+        background-color: #fff;
+
+        .field {
+          margin-bottom: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+
+          label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a4a4a;
+            font-weight: 500;
+          }
+
+          input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+
+            &:focus {
+              outline: none;
+              border-color: $primary-color;
+              box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+            }
+          }
+
+          small {
+            color: #dc3545;
+          }
+        }
+
+        .button-container {
+          margin-top: 1rem;
+          text-align: right;
+
+          button {
+            border-radius: 8px;
+            border: 1px solid $primary-color;
+            margin: 0 0.5rem;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background-color: $secondary-color;
+            }
+          }
+        }
       }
 
       ::ng-deep p-dropdown {
@@ -117,8 +174,8 @@
         }
 
         .p-dropdown-panel {
-          max-height: 300px; /* Ajuste a altura máxima conforme necessário */
-          overflow-y: auto; /* Permite rolar as opções quando ultrapassam o tamanho */
+          max-height: 300px;
+          overflow-y: auto;
 
           .p-dropdown-items {
             padding: 0.5rem;
@@ -135,7 +192,6 @@
         }
       }
 
-
       ::ng-deep p-calendar {
         border-radius: 4px;
 
@@ -145,43 +201,6 @@
           padding: 4px;
           border-radius: 4px;
         }
-      }
-
-      .field {
-        margin-bottom: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        width: 33%;
-
-        label {
-          display: block;
-          margin-bottom: 0.5rem;
-          color: #4a4a4a;
-          font-weight: 500;
-        }
-
-        input {
-          width: 100%;
-          padding: 0.5rem;
-          border: 1px solid #ced4da;
-          border-radius: 4px;
-
-          &:focus {
-            outline: none;
-            border-color: $primary-color;
-            box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
-          }
-        }
-
-        small {
-          color: #dc3545;
-        }
-      }
-
-      .radio-group {
-        display: flex;
-        gap: 2rem;
-        margin-top: 0.5rem;
       }
     }
 
@@ -198,7 +217,7 @@
         transition: all 0.3s ease;
 
         &:hover {
-          background-color: $secondary-color
+          background-color: $secondary-color;
         }
       }
     }
