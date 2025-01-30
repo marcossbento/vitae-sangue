@@ -20,6 +20,10 @@ export class ContractService {
     return this.http.get(this.apiUrl, { params });
   }
 
+  getContractById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
   createContrato(dadosContrato: any) {
     return this.http.post(this.apiUrl, dadosContrato);
   }

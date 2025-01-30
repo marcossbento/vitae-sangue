@@ -1,0 +1,21 @@
+@import '../../../variables.scss';
+
+::ng-deep .p-dialog {
+    background-color: $off-white;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid $primary-color;
+}
+
+.contract-details {
+    p {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      
+      strong {
+        display: inline-block;
+        width: 120px;
+        color: #000000;
+      }
+    }
+  }

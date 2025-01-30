@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from "../header/header.component";
 import { TableModule } from 'primeng/table';
@@ -6,6 +6,10 @@ import { CommonModule } from '@angular/common';
 import { ContractService } from '../../services/contract.service';
 import { RequisitionService } from '../../services/requisition.service';
 import { UserService } from '../../services/user.service';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
+import { ContractDetailDialogComponent } from '../contract-detail-dialog/contract-detail-dialog.component';
+
 
 @Component({
   selector: 'app-home-page',
@@ -14,7 +18,10 @@ import { UserService } from '../../services/user.service';
     RouterModule,
     HeaderComponent,
     TableModule,
-    CommonModule
+    CommonModule,
+    DialogModule,
+    ButtonModule,
+    ContractDetailDialogComponent
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
@@ -26,6 +33,9 @@ export class HomePageComponent implements OnInit {
   selectedCard: string = '';
   tableData: any[] = [];
   tableColumns: any[] = [];
+
+  @ViewChild('contractDialog') contractDialog!: ContractDetailDialogComponent;
+  selectedContract: any;
 
   constructor(private contractService: ContractService, private requisitionService: RequisitionService, private userService: UserService) {
     this.user = {
@@ -74,6 +84,7 @@ export class HomePageComponent implements OnInit {
     this.contractService.getContracts().subscribe({
       next: (response) => {
         this.tableData = response.content.map((contract: any) => ({
+          id: contract.id,
           requisitionType: 'Contrato',
           requester: contract.hospital.nome,
           quantity: contract.quantidadeSangue,
@@ -102,6 +113,16 @@ export class HomePageComponent implements OnInit {
         this.updateTableColumns('requisicoes');
       },
       error: (err: any) => console.error('Erro ao carregar requisições:', err)
+    });
+  }
+
+  showContractDetails(rowData: any) {
+    this.contractService.getContractById(rowData.id).subscribe({
+      next: (contract) => {
+        this.selectedContract = contract;
+        this.contractDialog.showDialog();
+      },
+      error: (err) => console.error('Erro ao carregar contrato:', err)
     });
   }
 
