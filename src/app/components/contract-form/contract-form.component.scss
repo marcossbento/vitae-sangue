@@ -110,11 +110,15 @@
         border-radius: 4px;
 
         .p-component {
-          width: 100%;
+          width: 90%;
         }
 
         .p-dropdown-label {
           padding: 0.5rem;
+        }
+
+        .p-dropdown-clear-icon {
+          margin-left: 20px;
         }
 
         .p-dropdown-panel {
