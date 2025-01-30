@@ -39,7 +39,7 @@ export class ContractFormComponent implements OnInit{
   selectedHemocentro: any;
   
   steps = [
-    { label: 'Hemocentro e usuário requeridos', icon: 'pi pi-home', completed: false, formGroupName: 'dadosRequeridos' },
+    { label: 'Hemocentro requerido', icon: 'pi pi-home', completed: false, formGroupName: 'dadosRequeridos' },
     { label: 'Datas e quantidade', icon: 'pi pi-file', completed: false, formGroupName: 'dataQuantidade' }
   ];
   
