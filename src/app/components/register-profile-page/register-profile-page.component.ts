@@ -14,6 +14,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { UserAuthenticatedService } from './../../services/user-authenticated.service';
 import { EstablishmentService } from './../../services/establishment.service';
 import { ProfileService } from '../../services/profile.service';
+import { catchError, from, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-register-profile-page',
@@ -55,25 +56,44 @@ export class RegisterProfilePageComponent {
     private userAuthenticatedService: UserAuthenticatedService,
     private establishmentService: EstablishmentService
 
-  ) {}
-
-  ngOnInit(): void  {
+  ) {
     const permissionControls: { [key: string]: any } = {};
 
-    this.carregarEstabelecimentos()
-    this.verificaPermisaso()
     this.permissions.forEach(permission => {
       permissionControls[`${permission}_visualizar`] = [false];
       permissionControls[`${permission}_criar`] = [false];
       permissionControls[`${permission}_editar`] = [false];
       permissionControls[`${permission}_deletar`] = [false];
+      permissionControls[`${permission}_id`] = [null];
     });
 
     this.registerProfileForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       estabelecimento: ['0'],
       ...permissionControls
-    });
+    })
+  }
+
+  ngOnInit(): void  {
+    this.userAuthenticatedService.getPermissionResource("USUARIO").pipe(
+      tap((response) => {
+        console.log(response)
+        if (!response[0] || !response[0].criacao) {
+          throw new Error("Usuário sem permissão");
+        }
+      }),
+      switchMap(() => from(this.initForm())),
+      catchError((error) => {
+        console.error('Error loading permissions:', error);
+        this.router.navigate(['home']); 
+        return of(null)
+      })
+    ).subscribe();
+  }
+
+  private async initForm(){
+    this.carregarEstabelecimentos()
+    this.verificaPermisaso()
   }
 
   async verificaPermisaso() {

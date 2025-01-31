@@ -14,6 +14,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { UserAuthenticatedService } from './../../services/user-authenticated.service';
 import { EstablishmentService } from './../../services/establishment.service';
 import { ProfileService } from '../../services/profile.service';
+import { catchError, from, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile-page',
@@ -58,14 +59,9 @@ export class EditProfilePageComponent {
     private userAuthenticatedService: UserAuthenticatedService,
     private establishmentService: EstablishmentService,
     private route: ActivatedRoute
-  ) {}
-
-  ngOnInit(): void  {
+  ) {
     const permissionControls: { [key: string]: any } = {};
-    this.profileId = this.route.snapshot.paramMap.get('id');
 
-    this.carregarEstabelecimentos()
-    this.verificaPermisaso()
     this.permissions.forEach(permission => {
       permissionControls[`${permission}_visualizar`] = [false];
       permissionControls[`${permission}_criar`] = [false];
@@ -80,6 +76,31 @@ export class EditProfilePageComponent {
       ...permissionControls
     });
 
+  }
+
+  ngOnInit(): void  {
+    this.userAuthenticatedService.getPermissionResource("USUARIO").pipe(
+      tap((response) => {
+        console.log(response)
+        if (!response[0] || !response[0].atualizacao) {
+          throw new Error("Usuário sem permissão");
+        }
+      }),
+      switchMap(() => from(this.initForm())),
+      catchError((error) => {
+        console.error('Error loading permissions:', error);
+        this.router.navigate(['home']);
+        return of(null)
+      })
+    ).subscribe();
+  }
+
+  private async initForm() {
+    this.profileId = this.route.snapshot.paramMap.get('id');
+
+    this.carregarEstabelecimentos()
+    this.verificaPermisaso()
+    
     if (this.profileId) {
       this.loadProfile(this.profileId);
     }
