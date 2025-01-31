@@ -163,9 +163,15 @@
           .p-button-info {
             background-color: $off-white;
             border-radius: 12px;
-            border-color: #4a5568;
+            border-color: $secondary-color;
+            color: $primary-color;
             padding: 12px;
             cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: translateX(4px);
+            }
           }
         }
       }

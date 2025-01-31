@@ -131,7 +131,9 @@ export class HomePageComponent implements OnInit {
               { label: 'Hospital', value: 'hospital.nome' },
               { label: 'Quantidade', value: 'quantidadeSangue' },
               { label: 'Situação', value: 'situacao' },
-              { label: 'Vencimento', value: 'vencimento' }
+              { label: 'Vencimento', value: 'vencimento' },
+              { label: 'Usuário Requerido', value: 'usuarioRequerido.nome' },
+              { label: 'Usuário Requerimento', value: 'usuarioRequerimento.nome' }
             ],
             contract
           );
@@ -187,7 +189,7 @@ export class HomePageComponent implements OnInit {
       this.tableColumns = [
         { field: 'requisitionType', header: 'Tipo de Requisição' },
         { field: 'requester', header: 'Requisitante' },
-        { field: 'quantity', header: 'Quantidade (ml)' },
+        { field: 'quantity', header: 'Quantidade' },
         { field: 'status', header: 'Situação' },
         { field: 'expiration', header: 'Vencimento' }
       ];
