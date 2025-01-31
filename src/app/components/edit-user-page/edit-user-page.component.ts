@@ -14,6 +14,7 @@ import { ProfileService } from '../../services/profile.service';
 import { UserService } from '../../services/user.service';
 import { EstablishmentService } from '../../services/establishment.service';
 import { UserAuthenticatedService } from '../../services/user-authenticated.service';
+import { catchError, from, of, switchMap, tap } from 'rxjs';
 
 
 @Component({
@@ -53,24 +54,40 @@ export class EditUserPageComponent {
     private userService: UserService,
     private route: ActivatedRoute
   ) {
-    this.initForm();
+    this.registerForm = this.fb.group({
+      nome: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
+      cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
+      logradouro: ['', Validators.required],
+      numero: ['', Validators.required],
+      bairro: ['', [Validators.required, Validators.minLength(3)]],
+      cidade: ['', Validators.required],
+      estado: ['', Validators.required],
+      telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
+      telefoneId: [null], 
+      perfil: ['', Validators.required], // Perfil do usuário
+      estabelecimento: ['', Validators.required], // Estabelecimento do usuário
+    });
   }
 
   async ngOnInit() {
-    this.userId = this.route.snapshot.paramMap.get('id');
-
-
-    this.loadProfiles();
-    await this.verificaPermisaso();
-
-    if(this.shouldShowEstabelecimento){
-      this.loadEstablishments();
-    }
+    this.userAuthenticatedService.getPermissionResource("USUARIO").pipe(
+      tap((response) => {
+        console.log(response)
+        if (!response[0] || !response[0].atualizacao) {
+          throw new Error("Usuário sem permissão");
+        }
+      }),
+      switchMap(() => from(this.initForm())),
+      catchError((error) => {
+        console.error('Error loading permissions:', error);
+        this.router.navigate(['home']); // Redireciona para 'home'
+        return of(null)
+      })
+    ).subscribe();
 
    
-    if (this.userId) {
-      this.loadUser(this.userId);
-    }
   }
 
   async verificaPermisaso() {
@@ -153,22 +170,21 @@ export class EditUserPageComponent {
     });
   }
 
-  private initForm(): void {
-    this.registerForm = this.fb.group({
-      nome: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
-      cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
-      logradouro: ['', Validators.required],
-      numero: ['', Validators.required],
-      bairro: ['', [Validators.required, Validators.minLength(3)]],
-      cidade: ['', Validators.required],
-      estado: ['', Validators.required],
-      telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
-      telefoneId: [null], 
-      perfil: ['', Validators.required], // Perfil do usuário
-      estabelecimento: ['', Validators.required], // Estabelecimento do usuário
-    });
+  private async initForm() {
+    this.userId = this.route.snapshot.paramMap.get('id');
+
+
+    this.loadProfiles();
+    await this.verificaPermisaso();
+
+    if(this.shouldShowEstabelecimento){
+      this.loadEstablishments();
+    }
+
+   
+    if (this.userId) {
+      this.loadUser(this.userId);
+    }
   }
 
   onSubmit(): void {

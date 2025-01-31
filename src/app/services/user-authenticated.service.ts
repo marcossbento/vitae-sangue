@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserAuthenticatedService {
-  private apiUrl = 'http://localhost:8080';
+  private apiUrl = 'http://localhost:8080/usuario';
   private userSubject = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
@@ -17,7 +17,7 @@ export class UserAuthenticatedService {
   private async fetchUser(): Promise<void> {
     console.log('Fetching user data...');
     try {
-      const user = await this.http.get<any>(`${this.apiUrl}/usuario/logado`)
+      const user = await this.http.get<any>(`${this.apiUrl}/logado`)
         .pipe(
           catchError((error) => {
             console.error('Error fetching user:', error);
@@ -30,6 +30,10 @@ export class UserAuthenticatedService {
       console.error('Error fetching user:', error);
       this.userSubject.next(null);
     }
+  }
+
+  getPermissionResource(resource: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/permissoes/${resource}`);
   }
 
   async getUserLogado(): Promise<any> {

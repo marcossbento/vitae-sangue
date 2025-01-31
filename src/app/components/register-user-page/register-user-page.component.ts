@@ -14,6 +14,7 @@ import { ProfileService } from '../../services/profile.service';
 import { UserService } from '../../services/user.service';
 import { EstablishmentService } from '../../services/establishment.service';
 import { UserAuthenticatedService } from '../../services/user-authenticated.service';
+import { catchError, from, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-register-user-page',
@@ -49,24 +50,39 @@ export class RegisterUserPageComponent {
     private establishmentService: EstablishmentService,
     private userAuthenticatedService: UserAuthenticatedService,
     private userService: UserService
-  ) {
-    this.initForm();
+  ) { 
+    this.registerForm = this.fb.group({
+      nome: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required, Validators.minLength(6)]],
+      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
+      cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
+      logradouro: ['', Validators.required],
+      numero: ['', Validators.required],
+      bairro: ['', [Validators.required, Validators.minLength(3)]],
+      cidade: ['', Validators.required],
+      estado: ['', Validators.required],
+      telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
+      perfil: ['', Validators.required], // Perfil do usuário
+      estabelecimento: ['', Validators.required], // Estabelecimento do usuário
+    });    
   }
 
   async ngOnInit() {
-    this.loadProfiles();
-    await this.verificaPermisaso();
-
-    if(this.shouldShowEstabelecimento){
-      this.loadEstablishments();
-      console.log("teste")
-    }
-
-    const perfilControl = this.registerForm.get('perfil');
-    console.log('Valor inicial perfil:', perfilControl?.value);  // Verifique o valor inicial
-    perfilControl?.valueChanges.subscribe((value) => {
-      console.log('Novo valor de perfil:', value);  // Verifique se o valueChanges está sendo disparado corretamente
-    });
+    this.userAuthenticatedService.getPermissionResource("USUARIO").pipe(
+      tap((response) => {
+        console.log(response)
+        if (!response[0] || !response[0].criacao) {
+          throw new Error("Usuário sem permissão");
+        }
+      }),
+      switchMap(() => from(this.initForm())),
+      catchError((error) => {
+        console.error('Error loading permissions:', error);
+        this.router.navigate(['home']); // Redireciona para 'home'
+        return of(null)
+      })
+    ).subscribe();
   }
 
   async verificaPermisaso() {
@@ -104,21 +120,19 @@ export class RegisterUserPageComponent {
     });
   }
 
-  private initForm(): void {
-    this.registerForm = this.fb.group({
-      nome: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, Validators.minLength(6)]],
-      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
-      cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
-      logradouro: ['', Validators.required],
-      numero: ['', Validators.required],
-      bairro: ['', [Validators.required, Validators.minLength(3)]],
-      cidade: ['', Validators.required],
-      estado: ['', Validators.required],
-      telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
-      perfil: ['', Validators.required], // Perfil do usuário
-      estabelecimento: ['', Validators.required], // Estabelecimento do usuário
+  private async initForm() {
+    this.loadProfiles();
+    await this.verificaPermisaso();
+
+    if(this.shouldShowEstabelecimento){
+      this.loadEstablishments();
+      console.log("teste")
+    }
+
+    const perfilControl = this.registerForm.get('perfil');
+    console.log('Valor inicial perfil:', perfilControl?.value);  // Verifique o valor inicial
+    perfilControl?.valueChanges.subscribe((value) => {
+      console.log('Novo valor de perfil:', value);  // Verifique se o valueChanges está sendo disparado corretamente
     });
   }
 
