@@ -2,10 +2,7 @@
   <div class="details-container" *ngIf="data">
     <div *ngFor="let field of fields" class="detail-row">
       <strong>{{ field.label }}:</strong>
-      <span>{{ getNestedProperty(data, field.value) }}</span>
+      <span>{{ getNestedProperty(data, field.value) || 'N/A' }}</span>
     </div>
   </div>
-  <ng-template pTemplate="footer">
-    <button pButton label="Fechar" (click)="visible = false"></button>
-  </ng-template>
 </p-dialog>

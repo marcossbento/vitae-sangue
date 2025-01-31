@@ -112,7 +112,8 @@ export class HomePageComponent implements OnInit {
           componentes: this.getComponentsList(requisicao.bolsas || []),
           status: requisicao.situacao || 'Pendente',
           hemocentro: requisicao.hemocentro?.nome || 'Não definido',
-          dataCriacao: requisicao.dataCriacao || new Date().toISOString()
+          usuarioRequerido: requisicao.usuarioRequerido?.nome || 'Não informado',
+          usuarioRequerimento: requisicao.usuarioRequerimento?.nome || 'Não informado'
         }));
         this.updateTableColumns('requisicoes');
       },
@@ -139,6 +140,13 @@ export class HomePageComponent implements OnInit {
     } else if (this.selectedCard === 'Requisições de bolsas') {
       this.requisitionService.getRequisitionById(rowData.id).subscribe({
         next: (requisition) => {
+          // Calcula campos dinamicamente a partir dos dados da API
+          const processedData = {
+            ...requisition,
+            quantidade: this.calculateTotalBags(requisition.bolsas || []),
+            componentes: this.getComponentsList(requisition.bolsas || [])
+          };
+  
           this.setDialogConfig(
             'Detalhes da Requisição',
             [
@@ -146,9 +154,11 @@ export class HomePageComponent implements OnInit {
               { label: 'Total de Bolsas', value: 'quantidade' },
               { label: 'Hemocomponentes', value: 'componentes' },
               { label: 'Hemocentro', value: 'hemocentro.nome' },
-              { label: 'Data de Criação', value: 'dataCriacao' }
+              { label: 'Usuário Requerido', value: 'usuarioRequerido.nome' },
+              { label: 'Usuário Requerimento', value: 'usuarioRequerimento.nome' },
+              { label: 'Situação', value: 'situacao' }
             ],
-            requisition
+            processedData
           );
         }
       });
@@ -167,11 +177,13 @@ export class HomePageComponent implements OnInit {
   }
 
   private getComponentsList(bolsas: any[]): string {
-    return bolsas.map(b => `${b.hemocomponente} (${b.qtdRequirida})`).join(', ');
+    return bolsas.map(b => 
+      `${b.hemocomponente} (Quantidade: ${b.qtdRequirida}, Tipo Sanguíneo: ${b.abo}${b.rh})`
+    ).join(', ');
   }
 
   private updateTableColumns(dataType: string): void {
-    if(dataType === 'contratos') {
+    if (dataType === 'contratos') {
       this.tableColumns = [
         { field: 'requisitionType', header: 'Tipo de Requisição' },
         { field: 'requester', header: 'Requisitante' },
@@ -180,7 +192,7 @@ export class HomePageComponent implements OnInit {
         { field: 'expiration', header: 'Vencimento' }
       ];
     }
-    else if(dataType === 'requisicoes') {
+    else if (dataType === 'requisicoes') {
       this.tableColumns = [
         { field: 'requisitionType', header: 'Tipo' },
         { field: 'requester', header: 'Hospital' },

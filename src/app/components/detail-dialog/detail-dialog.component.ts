@@ -20,6 +20,6 @@ export class DetailDialogComponent {
   }
 
   public getNestedProperty(obj: any, path: string): any {
-    return path.split('.').reduce((o, p) => o?.[p], obj);
+    return path.split('.').reduce((o, p) => (o !== null && o !== undefined ? o[p] : null), obj) || '-';
   }
 }
