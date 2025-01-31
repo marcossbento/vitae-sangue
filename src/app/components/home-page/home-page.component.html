@@ -26,25 +26,31 @@
             </ng-template>
             <ng-template pTemplate="body" let-rowData>
                 <tr>
-                    <td *ngFor="let col of tableColumns">
-                        <ng-container *ngIf="col.field === 'status'">
-                            <span [class]="'status-badge ' + rowData[col.field].toLowerCase()">
-                                {{rowData[col.field]}}
-                            </span>
-                        </ng-container>
-                        <ng-container *ngIf="col.field !== 'status'">
-                            {{rowData[col.field]}}
-                        </ng-container>
-                    </td>
-                    <td>
-                        <button pButton icon="pi pi-eye" class="p-button-rounded p-button-info"
-                            (click)="showContractDetails(rowData)" *ngIf="selectedCard === 'Contratos'"> Visualizar</button>
-                    </td>
+                  <td *ngFor="let col of tableColumns">
+                    <ng-container *ngIf="col.field === 'status'; else defaultCell">
+                      <span [class]="'status-badge ' + (rowData[col.field]?.toLowerCase() || 'pendente')">
+                        {{ rowData[col.field] || 'Pendente' }}
+                      </span>
+                    </ng-container>
+                    <ng-template #defaultCell>
+                      {{ rowData[col.field] || '-' }}
+                    </ng-template>
+                  </td>
+                  <td>
+                    <button pButton 
+                            icon="pi pi-eye" 
+                            class="p-button-rounded p-button-info"
+                            (click)="showDetails(rowData)"
+                            [disabled]="!rowData.id">
+                      Visualizar
+                    </button>
+                  </td>
                 </tr>
-            </ng-template>
+              </ng-template>
         </p-table>
 
-        <app-contract-detail-dialog [contractData]="selectedContract" #contractDialog></app-contract-detail-dialog>
+        <app-detail-dialog [data]="selectedItem" [dialogTitle]="dialogTitle" [fields]="dialogFields" #detailDialog>
+        </app-detail-dialog>
 
     </div>
 </section>

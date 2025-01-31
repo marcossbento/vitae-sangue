@@ -8,7 +8,7 @@ import { RequisitionService } from '../../services/requisition.service';
 import { UserService } from '../../services/user.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { ContractDetailDialogComponent } from '../contract-detail-dialog/contract-detail-dialog.component';
+import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 
 
 @Component({
@@ -21,7 +21,7 @@ import { ContractDetailDialogComponent } from '../contract-detail-dialog/contrac
     CommonModule,
     DialogModule,
     ButtonModule,
-    ContractDetailDialogComponent
+    DetailDialogComponent
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss'
@@ -34,8 +34,11 @@ export class HomePageComponent implements OnInit {
   tableData: any[] = [];
   tableColumns: any[] = [];
 
-  @ViewChild('contractDialog') contractDialog!: ContractDetailDialogComponent;
-  selectedContract: any;
+  // controle do dialog
+  @ViewChild('detailDialog') detailDialog!: DetailDialogComponent;
+  selectedItem: any;
+  dialogTitle: string = '';
+  dialogFields: { label: string, value: string }[] = [];
 
   constructor(private contractService: ContractService, private requisitionService: RequisitionService, private userService: UserService) {
     this.user = {
@@ -102,28 +105,61 @@ export class HomePageComponent implements OnInit {
     this.requisitionService.getRequisicoes().subscribe({
       next: (response) => {
         this.tableData = response.content.map((requisicao: any) => ({
-          requisitionType: 'Requisição de Bolsas',
-          requester: requisicao.hospital.nome,
-          quantidade: this.calculateTotalBags(requisicao.bolsas),
-          componentes: this.getComponentsList(requisicao.bolsas),
-          status: requisicao.situacao,
-          hemocentro: requisicao.hemocentro.nome
+          id: requisicao.id,
+          requisitionType: requisicao.tipo || 'Requisição de Bolsas',
+          requester: requisicao.hospital?.nome || 'Não informado',
+          quantidade: this.calculateTotalBags(requisicao.bolsas || []),
+          componentes: this.getComponentsList(requisicao.bolsas || []),
+          status: requisicao.situacao || 'Pendente',
+          hemocentro: requisicao.hemocentro?.nome || 'Não definido',
+          dataCriacao: requisicao.dataCriacao || new Date().toISOString()
         }));
-        
         this.updateTableColumns('requisicoes');
       },
-      error: (err: any) => console.error('Erro ao carregar requisições:', err)
+      error: (err) => console.error('Erro ao carregar requisições:', err)
     });
   }
 
-  showContractDetails(rowData: any) {
-    this.contractService.getContractById(rowData.id).subscribe({
-      next: (contract) => {
-        this.selectedContract = contract;
-        this.contractDialog.showDialog();
-      },
-      error: (err) => console.error('Erro ao carregar contrato:', err)
-    });
+  showDetails(rowData: any) {
+    if (this.selectedCard === 'Contratos') {
+      this.contractService.getContractById(rowData.id).subscribe({
+        next: (contract) => {
+          this.setDialogConfig(
+            'Detalhes do Contrato',
+            [
+              { label: 'Hospital', value: 'hospital.nome' },
+              { label: 'Quantidade', value: 'quantidadeSangue' },
+              { label: 'Situação', value: 'situacao' },
+              { label: 'Vencimento', value: 'vencimento' }
+            ],
+            contract
+          );
+        }
+      });
+    } else if (this.selectedCard === 'Requisições de bolsas') {
+      this.requisitionService.getRequisitionById(rowData.id).subscribe({
+        next: (requisition) => {
+          this.setDialogConfig(
+            'Detalhes da Requisição',
+            [
+              { label: 'Hospital', value: 'hospital.nome' },
+              { label: 'Total de Bolsas', value: 'quantidade' },
+              { label: 'Hemocomponentes', value: 'componentes' },
+              { label: 'Hemocentro', value: 'hemocentro.nome' },
+              { label: 'Data de Criação', value: 'dataCriacao' }
+            ],
+            requisition
+          );
+        }
+      });
+    }
+  }
+
+  private setDialogConfig(title: string, fields: any[], data: any) {
+    this.dialogTitle = title;
+    this.dialogFields = fields;
+    this.selectedItem = data;
+    this.detailDialog.showDialog();
   }
 
   private calculateTotalBags(bolsas: any[]): number {

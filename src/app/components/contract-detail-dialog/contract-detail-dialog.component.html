@@ -1,8 +1,0 @@
-<p-dialog header="Detalhes do Contrato" [(visible)]="visible" [style]="{ width: '50vw' }">
-    <div class="contract-details" *ngIf="contractData">
-      <p><strong>Hospital:</strong> {{ contractData.hospital?.nome }}</p>
-      <p><strong>Quantidade:</strong> {{ contractData.quantidadeSangue }} ml</p>
-      <p><strong>Situação:</strong> {{ contractData.situacao }}</p>
-      <p><strong>Vencimento:</strong> {{ contractData.vencimento | date }}</p>
-    </div>
-  </p-dialog>

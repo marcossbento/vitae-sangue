@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +12,22 @@ export class RequisitionService {
 
   getRequisicoes(page: number = 0, size: number = 10): Observable<any> {
     const params = new HttpParams()
-      .set('react', '8') // Valor fixo conforme exemplo
+      .set('react', '8')
       .set('size', size.toString())
       .set('page', page.toString())
-      .set('expt', '') // Valor vazio ou ajuste conforme necessidade
-      .set('id', '');  // Valor vazio ou ajuste conforme necessidade
+      .set('expt', '')
+      .set('id', ''); 
 
     return this.http.get(this.apiUrl, { params });
+  }
+
+  getRequisitionById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`).pipe(
+      catchError((error) => {
+        console.error('Erro na requisição:', error);
+        return throwError(() => new Error(error));
+      })
+    );
   }
 
   createRequisicao(dadosRequisicao: any) {
