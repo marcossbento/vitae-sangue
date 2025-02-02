@@ -166,6 +166,7 @@
             border-color: $secondary-color;
             color: $primary-color;
             padding: 12px;
+            margin: 0 5px;
             cursor: pointer;
             transition: all 0.3s ease;
 
@@ -173,6 +174,7 @@
               transform: translateX(4px);
             }
           }
+
         }
       }
 

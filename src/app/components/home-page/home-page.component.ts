@@ -48,7 +48,7 @@ export class HomePageComponent implements OnInit {
     this.cardItems = [
       { title: 'Contratos', createButtonTitle: ' contrato', pPhrase: 'os contratos', image: '../../assets/images/contratos.webp', link: '/form/contract' },
       { title: 'Requisições de bolsas', createButtonTitle: 'a requisição de bolsa', pPhrase: 'as requisições de bolsa', image: '../../assets/images/bolsasDeSangue.webp', link: '/form/requisition' },
-      { title: 'Envio de bolsas', createButtonTitle: ' envio de bolsa', pPhrase: 'os envios de bolsa', image: '../../assets/images/bolsasDeSangue.webp', link: '' }
+      { title: 'Usuarios', createButtonTitle: ' usuario', pPhrase: 'usuario', image: '../../assets/images/bolsasDeSangue.webp', link: '/user/create' }
     ];
 
   }
@@ -79,7 +79,9 @@ export class HomePageComponent implements OnInit {
       case 'Requisições de bolsas':
         this.loadRequisicoes();
         break;
-      // Adicionar caso para entrega de bolsas posrteriormente
+      case 'Usuarios':
+        this.loadUsuarios();
+        break;
     }
   }
 
@@ -92,15 +94,19 @@ export class HomePageComponent implements OnInit {
           requester: contract.hospital.nome,
           quantity: contract.quantidadeSangue,
           status: contract.situacao,
-          expiration: contract.vencimento
+          expiration: contract.vencimento,
+          actions: [
+            { label: 'Aprovar', link: `/contrato/aprovar/${contract.id}`, styleClass: 'p-button-info' },
+            { label: 'Negar', link: `/contrato/negar/${contract.id}`, styleClass: 'p-button-info' }
+          ]
         }));
-
+  
         this.updateTableColumns('contratos');
       },
       error: (err) => console.error('Erro ao carregar contratos:', err)
     });
-  }
-
+  }  
+  
   private loadRequisicoes(): void {
     this.requisitionService.getRequisicoes().subscribe({
       next: (response) => {
@@ -113,13 +119,40 @@ export class HomePageComponent implements OnInit {
           status: requisicao.situacao || 'Pendente',
           hemocentro: requisicao.hemocentro?.nome || 'Não definido',
           usuarioRequerido: requisicao.usuarioRequerido?.nome || 'Não informado',
-          usuarioRequerimento: requisicao.usuarioRequerimento?.nome || 'Não informado'
+          usuarioRequerimento: requisicao.usuarioRequerimento?.nome || 'Não informado',
+          actions: [
+            { label: 'Aprovar', link: `/requisicao/aprovar/${requisicao.id}`, styleClass: 'p-button-info' },
+            { label: 'Negar', link: `/requisicao/negar/${requisicao.id}`, styleClass: 'p-button-info' }
+          ]
         }));
+  
         this.updateTableColumns('requisicoes');
       },
       error: (err) => console.error('Erro ao carregar requisições:', err)
     });
-  }
+  }  
+  
+  private loadUsuarios(): void {
+    this.userService.geAlltUser().subscribe({
+      next: (response) => {
+        this.tableData = response.content.map((user: any) => ({
+          id: user.id,
+          nome: user.nome,
+          cpf: user.cpf,
+          email: user.email,
+          perfil: user.perfil.nome,
+          actions: [
+            { label: 'Editar', link: `/user/edit/${user.id}`, styleClass: 'p-button-info' }
+          ]
+        }));
+  
+        this.updateTableColumns('usuario');
+      },
+      error: (err) => console.error('Erro ao carregar usuários:', err)
+    });
+  }  
+  
+
 
   showDetails(rowData: any) {
     if (this.selectedCard === 'Contratos') {
@@ -164,6 +197,61 @@ export class HomePageComponent implements OnInit {
           );
         }
       });
+    } else if (this.selectedCard === 'Usuarios') {
+      this.userService.getUser(rowData.id).subscribe({
+        next: (user) => {
+          const formatPhones = (phones: any[]) => {
+            return phones.map(phone => 
+              `(${phone.ddd}) ${phone.numero}${phone.whatsapp ? ' (WhatsApp)' : ''} - ${phone.descricao}`
+            ).join(', ');
+          };
+    
+          const formatAddress = (endereco: any) => {
+            return `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade} - ${endereco.estado}, CEP: ${endereco.cep}`;
+          };
+    
+          const formatEstablishmentPhones = (phones: any[]) => {
+            if (!phones || phones.length === 0) return 'Nenhum telefone cadastrado';
+            return phones.map(phone => 
+              `(${phone.ddd}) ${phone.numero}${phone.whatsapp ? ' (WhatsApp)' : ''} - ${phone.descricao}`
+            ).join(', ');
+          };
+    
+          var tipoEstabelecimento =  user.estabelecimento.hospital ? 'Hospital' : 'Hemocentro';
+
+          const processedData = {
+            ...user,
+            enderecoCompleto: formatAddress(user.endereco),
+            telefonesFormatados: formatPhones(user.telefones || []),
+            estabelecimentoEndereco: user.estabelecimento ? formatAddress(user.estabelecimento.endereco) : '',
+            estabelecimentoTelefones: user.estabelecimento ? formatEstablishmentPhones(user.estabelecimento.telefones) : '',
+            tipoEstabelecimento
+          };
+
+    
+          this.setDialogConfig(
+            'Detalhes do Usuário',
+            [
+              // Informações Pessoais
+              { label: 'Nome', value: 'nome' },
+              { label: 'CPF', value: 'cpf' },
+              { label: 'E-mail', value: 'email' },
+              { label: 'Telefones', value: 'telefonesFormatados' },
+              { label: 'Endereço', value: 'enderecoCompleto' },
+              { label: 'Perfil', value: 'perfil.nome' },
+              { label: 'Estabelecimento', value: 'estabelecimento.nome' },
+              { label: 'E-mail do Estabelecimento', value: 'estabelecimento.email' },
+              { label: 'Endereço do Estabelecimento', value: 'estabelecimentoEndereco' },
+              { label: 'Telefones do Estabelecimento', value: 'estabelecimentoTelefones' },
+              { label: 'Tipo', value: "tipoEstabelecimento" }
+            ],
+            processedData
+          );
+        },
+        error: (error) => {
+          console.error('Erro ao carregar detalhes do usuário:', error);
+        }
+      });
     }
   }
 
@@ -191,7 +279,8 @@ export class HomePageComponent implements OnInit {
         { field: 'requester', header: 'Requisitante' },
         { field: 'quantity', header: 'Quantidade' },
         { field: 'status', header: 'Situação' },
-        { field: 'expiration', header: 'Vencimento' }
+        { field: 'expiration', header: 'Vencimento' },
+        { field: 'actions', header: 'Ações' } 
       ];
     }
     else if (dataType === 'requisicoes') {
@@ -201,10 +290,21 @@ export class HomePageComponent implements OnInit {
         { field: 'quantidade', header: 'Total de Bolsas' },
         { field: 'componentes', header: 'Hemocomponentes' },
         { field: 'status', header: 'Status' },
-        { field: 'hemocentro', header: 'Hemocentro' }
+        { field: 'hemocentro', header: 'Hemocentro' },
+        { field: 'actions', header: 'Ações' }
+      ];
+    }
+    else {
+      this.tableColumns = [
+        { field: 'nome', header: 'Nome' },
+        { field: 'cpf', header: 'CPF' },
+        { field: 'email', header: 'E-mail' },
+        { field: 'perfil', header: 'Perfil' },
+        { field: 'actions', header: 'Ações' }
       ];
     }
   }
+  
 
 }
 

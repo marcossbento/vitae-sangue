@@ -16,38 +16,56 @@
         </div>
     </div>
     <div class="content-table">
-        <p-table [value]="tableData" [columns]="tableColumns" [tableStyle]="{ 'min-width': '70rem' }">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th *ngFor="let col of tableColumns">
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-rowData>
-                <tr>
-                  <td *ngFor="let col of tableColumns">
-                    <ng-container *ngIf="col.field === 'status'; else defaultCell">
-                      <span [class]="'status-badge ' + (rowData[col.field]?.toLowerCase() || 'pendente')">
-                        {{ rowData[col.field] || 'Pendente' }}
-                      </span>
+      <p-table [value]="tableData" [columns]="tableColumns" [tableStyle]="{ 'min-width': '70rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th *ngFor="let col of tableColumns">
+                    {{col.header}}
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData>
+            <tr>
+                <td *ngFor="let col of tableColumns">
+                    <ng-container [ngSwitch]="col.field">
+                        <!-- Status column -->
+                        <ng-container *ngSwitchCase="'status'">
+                            <span [class]="'status-badge ' + (rowData[col.field]?.toLowerCase() || 'pendente')">
+                                {{ rowData[col.field] || 'Pendente' }}
+                            </span>
+                        </ng-container>
+                        
+                        <!-- Actions column -->
+                        <ng-container *ngSwitchCase="'actions'">
+                            <div class="flex gap-2">
+                                <a *ngFor="let action of rowData.actions"
+                                   [routerLink]="action.link"
+                                   pButton
+                                   [ngClass]="action.styleClass"
+                                   class="p-button-sm">
+                                    {{ action.label }}
+                                </a>
+                            </div>
+                        </ng-container>
+                        
+                        <!-- Default column -->
+                        <ng-container *ngSwitchDefault>
+                            {{ rowData[col.field] || '-' }}
+                        </ng-container>
                     </ng-container>
-                    <ng-template #defaultCell>
-                      {{ rowData[col.field] || '-' }}
-                    </ng-template>
-                  </td>
-                  <td>
+                </td>
+                <td>
                     <button pButton 
                             icon="pi pi-eye" 
                             class="p-button-rounded p-button-info"
                             (click)="showDetails(rowData)"
                             [disabled]="!rowData.id">
-                      Visualizar
+                        Visualizar
                     </button>
-                  </td>
-                </tr>
-              </ng-template>
-        </p-table>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
 
         <app-detail-dialog [data]="selectedItem" [dialogTitle]="dialogTitle" [fields]="dialogFields" #detailDialog>
         </app-detail-dialog>

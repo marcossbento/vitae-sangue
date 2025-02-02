@@ -80,7 +80,7 @@ export class RegisterUserPageComponent {
       catchError((error) => {
         console.error('Error loading permissions:', error);
         this.router.navigate(['home']); // Redireciona para 'home'
-        return of(null)
+        return of(null); 
       })
     ).subscribe();
   }

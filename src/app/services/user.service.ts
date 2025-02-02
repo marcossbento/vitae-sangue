@@ -23,6 +23,15 @@ export class UserService {
     return this.http.put(`${this.apiUrl}/${dadosRequisicao.userId}/alterarsenha`, dadosRequisicao);
   }
 
+  geAlltUser() {
+    const params = new HttpParams()
+      .set('page', '0')
+      .set('size', '10')
+      .set('sort', '');
+
+    return this.http.get<any>(`${this.apiUrl}`,  { params });
+  }
+
   getUser(id: any) {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
