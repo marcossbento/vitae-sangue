@@ -79,20 +79,19 @@ export class EditProfilePageComponent {
   }
 
   ngOnInit(): void  {
-    this.userAuthenticatedService.getPermissionResource("USUARIO").pipe(
-      tap((response) => {
-        console.log(response)
+    this.userAuthenticatedService.getPermissionResource("PERFIL").subscribe(
+      (response) => {
         if (!response[0] || !response[0].atualizacao) {
-          throw new Error("Usuário sem permissão");
+          this.router.navigate(['home']); 
         }
-      }),
-      switchMap(() => from(this.initForm())),
-      catchError((error) => {
-        console.error('Error loading permissions:', error);
-        this.router.navigate(['home']);
-        return of(null)
-      })
-    ).subscribe();
+  
+        this.initForm();
+      },
+      (error) => {
+        console.error('Erro ao carregar permissões:', error);
+        this.router.navigate(['home']); 
+      }
+    );
   }
 
   private async initForm() {

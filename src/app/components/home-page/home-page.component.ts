@@ -9,6 +9,9 @@ import { UserService } from '../../services/user.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
+import { UserAuthenticatedService } from '../../services/user-authenticated.service';
+import { catchError, of, switchMap, tap } from 'rxjs';
+import { ProfileService } from '../../services/profile.service';
 
 
 @Component({
@@ -34,28 +37,141 @@ export class HomePageComponent implements OnInit {
   tableData: any[] = [];
   tableColumns: any[] = [];
 
+  tabelaCarregada : boolean = false;
+
+  userPermisions: any;
+  profilePermisions: any;
+  requisicaoPermisions: any;
+  contratoPermisions: any;
+
+
   // controle do dialog
   @ViewChild('detailDialog') detailDialog!: DetailDialogComponent;
   selectedItem: any;
   dialogTitle: string = '';
   dialogFields: { label: string, value: string }[] = [];
 
-  constructor(private contractService: ContractService, private requisitionService: RequisitionService, private userService: UserService) {
+  constructor(private contractService: ContractService, 
+    private requisitionService: RequisitionService, 
+    private userService: UserService,
+    private userAuthenticatedService: UserAuthenticatedService, 
+    private profileService: ProfileService
+  ) {
     this.user = {
       name: 'Usuário'
     }
 
-    this.cardItems = [
-      { title: 'Contratos', createButtonTitle: ' contrato', pPhrase: 'os contratos', image: '../../assets/images/contratos.webp', link: '/form/contract' },
-      { title: 'Requisições de bolsas', createButtonTitle: 'a requisição de bolsa', pPhrase: 'as requisições de bolsa', image: '../../assets/images/bolsasDeSangue.webp', link: '/form/requisition' },
-      { title: 'Usuarios', createButtonTitle: ' usuario', pPhrase: 'usuario', image: '../../assets/images/bolsasDeSangue.webp', link: '/user/create' }
-    ];
+    this.cardItems = [];
 
   }
 
   ngOnInit(): void {
+    this.userAuthenticatedService.getPermissionResource("CONTRATO").subscribe(
+      (response) => {
+        if (response && response.length > 0) {
+          this.contratoPermisions = response[0];
+          
+          if (this.contratoPermisions.visualizacao) {
+            this.cardItems.push({
+              title: 'Contratos',
+              createButtonTitle: ' contrato',
+              pPhrase: ' contrato',
+              image: '../../assets/images/contratos.webp',
+              link: '/form/contract'
+            });
+
+            if(!this.tabelaCarregada){
+              this.tabelaCarregada = true;
+              this.onCardClick("Contratos")
+            }
+          }
+        }
+      },
+      (error) => {
+        console.error('Erro ao carregar permissões:', error);
+      }
+    );
+
+    this.userAuthenticatedService.getPermissionResource("BOLSA_REQUISICAO").subscribe(
+      (response) => {
+        if (response && response.length > 0) {
+          this.requisicaoPermisions = response[0];
+          
+          if (this.requisicaoPermisions.visualizacao) {
+            this.cardItems.push({
+              title: 'Requisições de bolsas',
+              createButtonTitle: ' a requisição de bolsa',
+              pPhrase: 'as requisições de bolsa',
+              image: '../../assets/images/bolsasDeSangue.webp',
+              link: '/form/requisition'
+            });
+
+            if(!this.tabelaCarregada){
+              this.tabelaCarregada = true;
+              this.onCardClick("Requisições de bolsas")
+            }
+          }
+        }
+      },
+      (error) => {
+        console.error('Erro ao carregar permissões:', error);
+      }
+    );
+
+    this.userAuthenticatedService.getPermissionResource("USUARIO").subscribe(
+      (response) => {
+        if (response && response.length > 0) {
+          this.userPermisions = response[0];
+
+          if (this.userPermisions.visualizacao) {
+            this.cardItems.push({
+              title: 'Usuarios',
+              createButtonTitle: ' usuario',
+              pPhrase: 'os usuario',
+              image: '../../assets/images/bolsasDeSangue.webp',
+              link: '/user/create'
+            });
+
+            if(!this.tabelaCarregada){
+              this.tabelaCarregada = true;
+              this.onCardClick("Usuarios")
+            }
+          }
+        }
+      },
+      (error) => {
+        console.error('Erro ao carregar permissões:', error);
+      }
+    );
+
+    
+    this.userAuthenticatedService.getPermissionResource("PERFIL").subscribe(
+      (response) => {
+        if (response && response.length > 0) {
+          this.profilePermisions = response[0];
+          
+          if (this.profilePermisions.visualizacao) {
+            this.cardItems.push({
+              title: 'Perfils',
+              createButtonTitle: ' perfil',
+              pPhrase: 'os perfis',
+              image: '../../assets/images/bolsasDeSangue.webp',
+              link: '/profile/create'
+            });
+
+            if(!this.tabelaCarregada){
+              this.tabelaCarregada = true;
+              this.onCardClick("Perfils")
+            }
+          }
+        }
+      },
+      (error) => {
+        console.error('Erro ao carregar permissões:', error);
+      }
+    );
+
     this.loadUserData();
-    this.loadContracts();
   }
 
   private loadUserData(): void {
@@ -82,79 +198,131 @@ export class HomePageComponent implements OnInit {
       case 'Usuarios':
         this.loadUsuarios();
         break;
+      case 'Perfils':
+        this.loadProfiles();
+        break;
     }
   }
 
   private loadContracts(): void {
     this.contractService.getContracts().subscribe({
       next: (response) => {
-        this.tableData = response.content.map((contract: any) => ({
-          id: contract.id,
-          requisitionType: 'Contrato',
-          requester: contract.hospital.nome,
-          quantity: contract.quantidadeSangue,
-          status: contract.situacao,
-          expiration: contract.vencimento,
-          actions: [
-            { label: 'Aprovar', link: `/contrato/aprovar/${contract.id}`, styleClass: 'p-button-info' },
-            { label: 'Negar', link: `/contrato/negar/${contract.id}`, styleClass: 'p-button-info' }
-          ]
-        }));
+        this.tableData = response.content.map((contract: any) => {
+          let actions: any = [];
+          
+          if (this.contratoPermisions.atualizacao) {
+            actions = [
+              { label: 'Aprovar', link: `/contrato/aprovar/${contract.id}`, styleClass: 'p-button-info' },
+              { label: 'Negar', link: `/contrato/negar/${contract.id}`, styleClass: 'p-button-info' }
+            ];
+          }
+  
+          return {
+            id: contract.id,
+            requisitionType: 'Contrato',
+            requester: contract.hospital.nome,
+            quantity: contract.quantidadeSangue,
+            status: contract.situacao,
+            expiration: contract.vencimento,
+            actions: actions 
+          };
+        });
   
         this.updateTableColumns('contratos');
       },
       error: (err) => console.error('Erro ao carregar contratos:', err)
     });
-  }  
+  }
   
   private loadRequisicoes(): void {
     this.requisitionService.getRequisicoes().subscribe({
       next: (response) => {
-        this.tableData = response.content.map((requisicao: any) => ({
-          id: requisicao.id,
-          requisitionType: requisicao.tipo || 'Requisição de Bolsas',
-          requester: requisicao.hospital?.nome || 'Não informado',
-          quantidade: this.calculateTotalBags(requisicao.bolsas || []),
-          componentes: this.getComponentsList(requisicao.bolsas || []),
-          status: requisicao.situacao || 'Pendente',
-          hemocentro: requisicao.hemocentro?.nome || 'Não definido',
-          usuarioRequerido: requisicao.usuarioRequerido?.nome || 'Não informado',
-          usuarioRequerimento: requisicao.usuarioRequerimento?.nome || 'Não informado',
-          actions: [
-            { label: 'Aprovar', link: `/requisicao/aprovar/${requisicao.id}`, styleClass: 'p-button-info' },
-            { label: 'Negar', link: `/requisicao/negar/${requisicao.id}`, styleClass: 'p-button-info' }
-          ]
-        }));
+        this.tableData = response.content.map((requisicao: any) => {
+          let actions: any = [];
+  
+          if (this.requisicaoPermisions.atualizacao) {
+            actions = [
+              { label: 'Aprovar', link: `/requisicao/aprovar/${requisicao.id}`, styleClass: 'p-button-info' },
+              { label: 'Negar', link: `/requisicao/negar/${requisicao.id}`, styleClass: 'p-button-info' }
+            ];
+          }
+  
+          return {
+            id: requisicao.id,
+            requisitionType: requisicao.tipo || 'Requisição de Bolsas',
+            requester: requisicao.hospital?.nome || 'Não informado',
+            quantidade: this.calculateTotalBags(requisicao.bolsas || []),
+            componentes: this.getComponentsList(requisicao.bolsas || []),
+            status: requisicao.situacao || 'Pendente',
+            hemocentro: requisicao.hemocentro?.nome || 'Não definido',
+            usuarioRequerido: requisicao.usuarioRequerido?.nome || 'Não informado',
+            usuarioRequerimento: requisicao.usuarioRequerimento?.nome || 'Não informado',
+            actions: actions 
+          };
+        });
   
         this.updateTableColumns('requisicoes');
       },
       error: (err) => console.error('Erro ao carregar requisições:', err)
     });
-  }  
+  }
+   
   
   private loadUsuarios(): void {
     this.userService.geAlltUser().subscribe({
       next: (response) => {
-        this.tableData = response.content.map((user: any) => ({
-          id: user.id,
-          nome: user.nome,
-          cpf: user.cpf,
-          email: user.email,
-          perfil: user.perfil.nome,
-          actions: [
-            { label: 'Editar', link: `/user/edit/${user.id}`, styleClass: 'p-button-info' }
-          ]
-        }));
-  
+        this.tableData = response.content.map((user: any) => {
+          let actions: any = [];
+
+          if (this.userPermisions.atualizacao) {
+            actions = [
+              { label: 'Editar', link: `/user/edit/${user.id}`, styleClass: 'p-button-info' }
+            ];
+          }
+
+          return {
+            id: user.id,
+            nome: user.nome,
+            cpf: user.cpf,
+            email: user.email,
+            perfil: user.perfil.nome,
+            actions: actions 
+          };
+        });
+
         this.updateTableColumns('usuario');
       },
       error: (err) => console.error('Erro ao carregar usuários:', err)
     });
   }  
+
+  private loadProfiles(): void {
+    this.profileService.getProfiles().subscribe({
+      next: (response) => {
+        this.tableData = response.map((perfil: any) => {
+          let actions: any = [];
+
+          if (this.profilePermisions.atualizacao) {
+            actions = [
+              { label: 'Editar', link: `/profile/edit/${perfil.id}`, styleClass: 'p-button-info' }
+            ];
+          }
+
+          return {
+            id: perfil.id, 
+            nome: perfil.nome,
+            estabelecimento: perfil.estabelecimento.nome,
+            actions: actions 
+          };
+        });
+
+        this.updateTableColumns('perfil');
+      },
+      error: (err) => console.error('Erro ao carregar usuários:', err)
+    });
+  }  
   
-
-
-  showDetails(rowData: any) {
+  showDetails(rowData: any) {    
     if (this.selectedCard === 'Contratos') {
       this.contractService.getContractById(rowData.id).subscribe({
         next: (contract) => {
@@ -252,7 +420,58 @@ export class HomePageComponent implements OnInit {
           console.error('Erro ao carregar detalhes do usuário:', error);
         }
       });
+    }else if (this.selectedCard === 'Perfils') {
+      this.profileService.getProfile(rowData.id).subscribe({
+        next: (perfil) => {
+          const formatPermissions = (permissions: any[]) => {
+            const permissoesFormatadas: any = {};
+    
+            permissions.forEach(permission => {
+              const controller = permission.controller;
+              permissoesFormatadas[controller] = `
+                ${permission.criacao ? 'Criar' : ''},
+                ${permission.visualizacao ? 'Visualizar' : ''},
+                ${permission.atualizacao ? 'Atualizar' : ''},
+                ${permission.deletar ? 'Deletar' : ''}`.trim();
+            });
+    
+            return permissoesFormatadas;
+          };
+    
+          const formatEstablishment = (establishment: any) => {
+            return establishment ? 
+              `${establishment.nome}, E-mail: ${establishment.email}, Tipo: ${establishment.hospital ? 'Hospital' : 'Hemocentro'}` :
+              'Nenhum estabelecimento cadastrado';
+          };
+    
+          const processedData = {
+            ...perfil,
+            permissoesFormatadas: formatPermissions(perfil.permissoes || []),
+            estabelecimentoInfo: formatEstablishment(perfil.estabelecimento)
+          };
+    
+          const fields = [
+            { label: 'Nome', value: 'nome' },
+            { label: 'Estabelecimento', value: 'estabelecimentoInfo' },
+            { label: 'Permissões', value: ' ' },
+            ...Object.keys(processedData.permissoesFormatadas).map(controller => ({
+              label: `Recurso ${controller}`,
+              value: `permissoesFormatadas.${controller}`
+            }))
+          ];
+    
+          this.setDialogConfig(
+            'Detalhes do Perfil',
+            fields,
+            processedData
+          );
+        },
+        error: (error) => {
+          console.error('Erro ao carregar detalhes do perfil:', error);
+        }
+      });
     }
+    
   }
 
   private setDialogConfig(title: string, fields: any[], data: any) {
@@ -291,6 +510,13 @@ export class HomePageComponent implements OnInit {
         { field: 'componentes', header: 'Hemocomponentes' },
         { field: 'status', header: 'Status' },
         { field: 'hemocentro', header: 'Hemocentro' },
+        { field: 'actions', header: 'Ações' }
+      ];
+    }
+    else if (dataType === 'perfil') {
+      this.tableColumns = [
+        { field: 'nome', header: 'Nome' },
+        { field: 'estabelecimento', header: 'Estabelecimento' },
         { field: 'actions', header: 'Ações' }
       ];
     }
