@@ -18,14 +18,14 @@
     .pending-cards-container {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
         padding: 1rem 3rem;
 
         .pending-card-item {
             background-color: $primary-color;
             border-radius: 12px;
             display: flex;
-            width: 33%;
+            width: 24%;
             transition: all 0.3s ease;
             cursor: pointer;
 

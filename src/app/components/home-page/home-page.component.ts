@@ -77,7 +77,7 @@ export class HomePageComponent implements OnInit {
             this.cardItems.push({
               title: 'Contratos',
               createButtonTitle: ' contrato',
-              pPhrase: ' contrato',
+              pPhrase: ' contratos',
               image: '../../assets/images/contratos.webp',
               link: '/form/contract',
               permissionCreate: this.contratoPermisions.criacao
@@ -103,8 +103,8 @@ export class HomePageComponent implements OnInit {
           if (this.requisicaoPermisions.visualizacao) {
             this.cardItems.push({
               title: 'Requisições de bolsas',
-              createButtonTitle: 'a requisição de bolsa',
-              pPhrase: 'as requisições de bolsa',
+              createButtonTitle: ' requisição de bolsa',
+              pPhrase: 'requisições de bolsa',
               image: '../../assets/images/bolsasDeSangue.webp',
               link: '/form/requisition',
               permissionCreate: this.requisicaoPermisions.criacao

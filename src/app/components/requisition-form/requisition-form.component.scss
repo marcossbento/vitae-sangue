@@ -89,6 +89,7 @@
     }
 
     .form-fields {
+      width: 30%;
       display: flex;
       flex-direction: column;
       gap: 2rem;
@@ -166,7 +167,7 @@
         border-radius: 4px;
 
         .p-component {
-          width: 100%;
+          width: 90%;
         }
 
         .p-dropdown-label {
@@ -189,6 +190,11 @@
               }
             }
           }
+        }
+
+        .p-dropdown-clear-icon {
+          color: $tertiary-color;
+          margin-left: 24px;
         }
       }
 
