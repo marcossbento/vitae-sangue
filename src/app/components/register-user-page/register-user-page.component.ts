@@ -50,7 +50,7 @@ export class RegisterUserPageComponent {
     private establishmentService: EstablishmentService,
     private userAuthenticatedService: UserAuthenticatedService,
     private userService: UserService
-  ) { 
+  ) {
     this.registerForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -65,21 +65,21 @@ export class RegisterUserPageComponent {
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
       perfil: ['', Validators.required], // Perfil do usuário
       estabelecimento: ['', Validators.required], // Estabelecimento do usuário
-    });    
+    });
   }
 
   async ngOnInit() {
     this.userAuthenticatedService.getPermissionResource("USUARIO").subscribe(
       (response) => {
         if (!response[0] || !response[0].criacao) {
-          this.router.navigate(['home']); 
+          this.router.navigate(['home']);
         }
-  
+
         this.initForm();
       },
       (error) => {
         console.error('Erro ao carregar permissões:', error);
-        this.router.navigate(['home']); 
+        this.router.navigate(['home']);
       }
     );
   }
@@ -135,6 +135,10 @@ export class RegisterUserPageComponent {
     });
   }
 
+  onBack(): void {
+    this.router.navigate(['home']);
+  }
+
   onSubmit(): void {
     console.log('Formulário enviado:', this.registerForm.value);
     if (this.registerForm.valid) {
@@ -157,10 +161,10 @@ export class RegisterUserPageComponent {
           id: 0,
           ddd: parseInt(this.registerForm.get('telefone')?.value.slice(1, 3), 10),
           numero: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10),
-          descricao: 'Contato de usuario', 
+          descricao: 'Contato de usuario',
           whatsapp: true
         }],
-        perfilId: this.registerForm.get('perfil')?.value, 
+        perfilId: this.registerForm.get('perfil')?.value,
         estabelecimentoId: this.shouldShowEstabelecimento ? this.registerForm.get('estabelecimento')?.value.id : 0
       };
       console.log(requestBody);
