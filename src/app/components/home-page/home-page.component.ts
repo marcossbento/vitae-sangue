@@ -79,7 +79,8 @@ export class HomePageComponent implements OnInit {
               createButtonTitle: ' contrato',
               pPhrase: ' contrato',
               image: '../../assets/images/contratos.webp',
-              link: '/form/contract'
+              link: '/form/contract',
+              permissionCreate: this.contratoPermisions.criacao
             });
 
             if(!this.tabelaCarregada){
@@ -105,7 +106,8 @@ export class HomePageComponent implements OnInit {
               createButtonTitle: ' a requisição de bolsa',
               pPhrase: 'as requisições de bolsa',
               image: '../../assets/images/bolsasDeSangue.webp',
-              link: '/form/requisition'
+              link: '/form/requisition',
+              permissionCreate: this.requisicaoPermisions.criacao
             });
 
             if(!this.tabelaCarregada){
@@ -131,7 +133,8 @@ export class HomePageComponent implements OnInit {
               createButtonTitle: ' usuario',
               pPhrase: 'os usuario',
               image: '../../assets/images/bolsasDeSangue.webp',
-              link: '/user/create'
+              link: '/user/create',
+              permissionCreate: this.userPermisions.criacao
             });
 
             if(!this.tabelaCarregada){
@@ -154,16 +157,17 @@ export class HomePageComponent implements OnInit {
 
           if (this.profilePermisions.visualizacao) {
             this.cardItems.push({
-              title: 'Perfils',
+              title: 'Perfis',
               createButtonTitle: ' perfil',
               pPhrase: 'os perfis',
               image: '../../assets/images/bolsasDeSangue.webp',
-              link: '/profile/create'
+              link: '/profile/create',
+              permissionCreate: this.profilePermisions.criacao
             });
 
             if(!this.tabelaCarregada){
               this.tabelaCarregada = true;
-              this.onCardClick("Perfils")
+              this.onCardClick("Perfis")
             }
           }
         }
@@ -200,7 +204,7 @@ export class HomePageComponent implements OnInit {
       case 'Usuarios':
         this.loadUsuarios();
         break;
-      case 'Perfils':
+      case 'Perfis':
         this.loadProfiles();
         break;
     }
@@ -212,7 +216,7 @@ export class HomePageComponent implements OnInit {
         this.tableData = response.content.map((contract: any) => {
           let actions: any = [];
 
-          if (this.contratoPermisions.atualizacao && contract.situacao === 'PENDENTE' && this.user.establishment.hospital) {
+          if (this.contratoPermisions.atualizacao && contract.situacao === 'PENDENTE' && !this.user.establishment.hospital) {
             actions = [
               {
                 label: 'Aprovar',
@@ -275,7 +279,7 @@ export class HomePageComponent implements OnInit {
           let actions: any = [];
 
 
-            if (this.requisicaoPermisions.atualizacao && requisicao.situacao === 'PENDENTE' && this.user.establishment.hospital) {
+            if (this.requisicaoPermisions.atualizacao && requisicao.situacao === 'PENDENTE' && !this.user.establishment.hospital) {
               actions = [
                 {
                   label: 'Aprovar',
@@ -343,7 +347,8 @@ export class HomePageComponent implements OnInit {
 
           if (this.userPermisions.atualizacao) {
             actions = [
-              { label: 'Editar', link: `/user/edit/${user.id}`, styleClass: 'p-button-info' }
+              { label: 'Editar', link: `/user/edit/${user.id}`, styleClass: 'p-button-info' },
+              { label: 'Alterar Senha', link: `/user/${user.id}/reset-password`, styleClass: 'p-button-info' }
             ];
           }
 
@@ -487,7 +492,7 @@ export class HomePageComponent implements OnInit {
           console.error('Erro ao carregar detalhes do usuário:', error);
         }
       });
-    }else if (this.selectedCard === 'Perfils') {
+    }else if (this.selectedCard === 'Perfis') {
       this.profileService.getProfile(rowData.id).subscribe({
         next: (perfil) => {
           const formatPermissions = (permissions: any[]) => {

@@ -7,11 +7,13 @@
     <div class="pending-cards-container">
         <div class="pending-card-item" *ngFor="let cardItem of cardItems" (click)="onCardClick(cardItem.title)"
             [class.selected]="selectedCard === cardItem.title">
-            <img src={{cardItem.image}} alt="">
+            <img [src]="cardItem.image" alt="">
             <div class="pending-card-item-text">
-                <h2>{{cardItem.title}}</h2>
+                <h2>{{ cardItem.title }}</h2>
                 <p>👆Clique para visualizar {{ cardItem.pPhrase }}</p>
-                <button type="button" routerLink="{{ cardItem.link }}">Crie um{{ cardItem.createButtonTitle }}</button>
+                <button *ngIf="cardItem.permissionCreate" type="button" [routerLink]="cardItem.link">
+                    Crie um{{ cardItem.createButtonTitle }}
+                </button>
             </div>
         </div>
     </div>
