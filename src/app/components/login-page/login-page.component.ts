@@ -26,22 +26,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./login-page.component.scss']
 })
 export class LoginPageComponent {
-senha: string = '';
-email: string = '';
-errorMessage: string = '';
-constructor(private authService: AuthService, private router: Router) {}
+  senha: string = '';
+  email: string = '';
+  errorMessage: string = '';
 
+  constructor(private authService: AuthService, private router: Router) {}
 
-onLogin(): void {
-  this.authService.login(this.email, this.senha).subscribe(
-    (response) => {
-      localStorage.setItem('authToken', response.token);
-      this.router.navigate(['home']);
-    },
-    (error) => {
-      alert('Credenciais inválidas. Tente novamente.');
-      console.error('Erro ao fazer login:', error);
-    }
-  );
-}
+  onLogin(): void {
+    this.authService.login(this.email, this.senha).subscribe(
+      (response) => {
+        this.authService.setToken(response.token);
+        this.router.navigate(['home']);
+      },
+      (error) => {
+        alert('Credenciais inválidas. Tente novamente.');
+        console.error('Erro ao fazer login:', error);
+      }
+    );
+  }
 }

@@ -51,10 +51,10 @@ export class HomePageComponent implements OnInit {
   dialogTitle: string = '';
   dialogFields: { label: string, value: string }[] = [];
 
-  constructor(private contractService: ContractService, 
-    private requisitionService: RequisitionService, 
+  constructor(private contractService: ContractService,
+    private requisitionService: RequisitionService,
     private userService: UserService,
-    private userAuthenticatedService: UserAuthenticatedService, 
+    private userAuthenticatedService: UserAuthenticatedService,
     private profileService: ProfileService
   ) {
     this.user = {
@@ -63,6 +63,8 @@ export class HomePageComponent implements OnInit {
 
     this.cardItems = [];
 
+
+
   }
 
   ngOnInit(): void {
@@ -70,7 +72,7 @@ export class HomePageComponent implements OnInit {
       (response) => {
         if (response && response.length > 0) {
           this.contratoPermisions = response[0];
-          
+
           if (this.contratoPermisions.visualizacao) {
             this.cardItems.push({
               title: 'Contratos',
@@ -96,7 +98,7 @@ export class HomePageComponent implements OnInit {
       (response) => {
         if (response && response.length > 0) {
           this.requisicaoPermisions = response[0];
-          
+
           if (this.requisicaoPermisions.visualizacao) {
             this.cardItems.push({
               title: 'Requisições de bolsas',
@@ -144,12 +146,12 @@ export class HomePageComponent implements OnInit {
       }
     );
 
-    
+
     this.userAuthenticatedService.getPermissionResource("PERFIL").subscribe(
       (response) => {
         if (response && response.length > 0) {
           this.profilePermisions = response[0];
-          
+
           if (this.profilePermisions.visualizacao) {
             this.cardItems.push({
               title: 'Perfils',
@@ -209,14 +211,46 @@ export class HomePageComponent implements OnInit {
       next: (response) => {
         this.tableData = response.content.map((contract: any) => {
           let actions: any = [];
-          
-          if (this.contratoPermisions.atualizacao) {
+
+          if (this.contratoPermisions.atualizacao && contract.situacao === 'PENDENTE' && this.user.establishment.hospital) {
             actions = [
-              { label: 'Aprovar', link: `/contrato/aprovar/${contract.id}`, styleClass: 'p-button-info' },
-              { label: 'Negar', link: `/contrato/negar/${contract.id}`, styleClass: 'p-button-info' }
+              {
+                label: 'Aprovar',
+                isNavigation: false,
+                onClick: () => {
+                  this.contractService.approveContract(contract.id).subscribe({
+                    next: (response) => {
+                      console.log('Contrato aprovado com sucesso', response);
+                      // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
+                      this.loadContracts();
+                    },
+                    error: (err) => {
+                      console.error('Erro ao aprovar contrato', err);
+                    }
+                  });
+                },
+                styleClass: 'p-button-info'
+              },
+              {
+                label: 'Negar',
+                isNavigation: false,
+                onClick: () => {
+                  this.contractService.denyContract(contract.id).subscribe({
+                    next: (response) => {
+                      console.log('Contro negado', response);
+                      // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
+                      this.loadContracts();
+                    },
+                    error: (err) => {
+                      console.error('Erro ao negar contrato', err);
+                    }
+                  });
+                },
+                styleClass: 'p-button-info'
+              }
             ];
           }
-  
+
           return {
             id: contract.id,
             requisitionType: 'Contrato',
@@ -224,29 +258,62 @@ export class HomePageComponent implements OnInit {
             quantity: contract.quantidadeSangue,
             status: contract.situacao,
             expiration: contract.vencimento,
-            actions: actions 
+            actions: actions
           };
         });
-  
+
         this.updateTableColumns('contratos');
       },
       error: (err) => console.error('Erro ao carregar contratos:', err)
     });
   }
-  
+
   private loadRequisicoes(): void {
     this.requisitionService.getRequisicoes().subscribe({
       next: (response) => {
         this.tableData = response.content.map((requisicao: any) => {
           let actions: any = [];
-  
-          if (this.requisicaoPermisions.atualizacao) {
-            actions = [
-              { label: 'Aprovar', link: `/requisicao/aprovar/${requisicao.id}`, styleClass: 'p-button-info' },
-              { label: 'Negar', link: `/requisicao/negar/${requisicao.id}`, styleClass: 'p-button-info' }
-            ];
-          }
-  
+
+
+            if (this.requisicaoPermisions.atualizacao && requisicao.situacao === 'PENDENTE' && this.user.establishment.hospital) {
+              actions = [
+                {
+                  label: 'Aprovar',
+                  isNavigation: false,
+                  onClick: () => {
+                    this.requisitionService.approveRequisicao(requisicao.id).subscribe({
+                      next: (response) => {
+                        console.log('Requisição aprovado com sucesso', response);
+                        // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
+                        this.loadRequisicoes();
+                      },
+                      error: (err) => {
+                        console.error('Erro ao aprovar Requisição', err);
+                      }
+                    });
+                  },
+                  styleClass: 'p-button-info'
+                },
+                {
+                  label: 'Negar',
+                  isNavigation: false,
+                  onClick: () => {
+                    this.requisitionService.denyRequisicao(requisicao.id).subscribe({
+                      next: (response) => {
+                        console.log('Requisição negado', response);
+                        // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
+                        this.loadRequisicoes();
+                      },
+                      error: (err) => {
+                        console.error('Erro ao negar Requisição', err);
+                      }
+                    });
+                  },
+                  styleClass: 'p-button-info'
+                }
+              ];
+            }
+
           return {
             id: requisicao.id,
             requisitionType: requisicao.tipo || 'Requisição de Bolsas',
@@ -257,17 +324,17 @@ export class HomePageComponent implements OnInit {
             hemocentro: requisicao.hemocentro?.nome || 'Não definido',
             usuarioRequerido: requisicao.usuarioRequerido?.nome || 'Não informado',
             usuarioRequerimento: requisicao.usuarioRequerimento?.nome || 'Não informado',
-            actions: actions 
+            actions: actions
           };
         });
-  
+
         this.updateTableColumns('requisicoes');
       },
       error: (err) => console.error('Erro ao carregar requisições:', err)
     });
   }
-   
-  
+
+
   private loadUsuarios(): void {
     this.userService.geAlltUser().subscribe({
       next: (response) => {
@@ -286,7 +353,7 @@ export class HomePageComponent implements OnInit {
             cpf: user.cpf,
             email: user.email,
             perfil: user.perfil.nome,
-            actions: actions 
+            actions: actions
           };
         });
 
@@ -294,7 +361,7 @@ export class HomePageComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao carregar usuários:', err)
     });
-  }  
+  }
 
   private loadProfiles(): void {
     this.profileService.getProfiles().subscribe({
@@ -309,10 +376,10 @@ export class HomePageComponent implements OnInit {
           }
 
           return {
-            id: perfil.id, 
+            id: perfil.id,
             nome: perfil.nome,
             estabelecimento: perfil.estabelecimento.nome,
-            actions: actions 
+            actions: actions
           };
         });
 
@@ -320,9 +387,9 @@ export class HomePageComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao carregar usuários:', err)
     });
-  }  
-  
-  showDetails(rowData: any) {    
+  }
+
+  showDetails(rowData: any) {
     if (this.selectedCard === 'Contratos') {
       this.contractService.getContractById(rowData.id).subscribe({
         next: (contract) => {
@@ -349,7 +416,7 @@ export class HomePageComponent implements OnInit {
             quantidade: this.calculateTotalBags(requisition.bolsas || []),
             componentes: this.getComponentsList(requisition.bolsas || [])
           };
-  
+
           this.setDialogConfig(
             'Detalhes da Requisição',
             [
@@ -369,22 +436,22 @@ export class HomePageComponent implements OnInit {
       this.userService.getUser(rowData.id).subscribe({
         next: (user) => {
           const formatPhones = (phones: any[]) => {
-            return phones.map(phone => 
+            return phones.map(phone =>
               `(${phone.ddd}) ${phone.numero}${phone.whatsapp ? ' (WhatsApp)' : ''} - ${phone.descricao}`
             ).join(', ');
           };
-    
+
           const formatAddress = (endereco: any) => {
             return `${endereco.logradouro}, ${endereco.numero}, ${endereco.bairro}, ${endereco.cidade} - ${endereco.estado}, CEP: ${endereco.cep}`;
           };
-    
+
           const formatEstablishmentPhones = (phones: any[]) => {
             if (!phones || phones.length === 0) return 'Nenhum telefone cadastrado';
-            return phones.map(phone => 
+            return phones.map(phone =>
               `(${phone.ddd}) ${phone.numero}${phone.whatsapp ? ' (WhatsApp)' : ''} - ${phone.descricao}`
             ).join(', ');
           };
-    
+
           var tipoEstabelecimento =  user.estabelecimento.hospital ? 'Hospital' : 'Hemocentro';
 
           const processedData = {
@@ -396,7 +463,7 @@ export class HomePageComponent implements OnInit {
             tipoEstabelecimento
           };
 
-    
+
           this.setDialogConfig(
             'Detalhes do Usuário',
             [
@@ -425,7 +492,7 @@ export class HomePageComponent implements OnInit {
         next: (perfil) => {
           const formatPermissions = (permissions: any[]) => {
             const permissoesFormatadas: any = {};
-    
+
             permissions.forEach(permission => {
               const controller = permission.controller;
               permissoesFormatadas[controller] = `
@@ -434,22 +501,22 @@ export class HomePageComponent implements OnInit {
                 ${permission.atualizacao ? 'Atualizar' : ''},
                 ${permission.deletar ? 'Deletar' : ''}`.trim();
             });
-    
+
             return permissoesFormatadas;
           };
-    
+
           const formatEstablishment = (establishment: any) => {
-            return establishment ? 
+            return establishment ?
               `${establishment.nome}, E-mail: ${establishment.email}, Tipo: ${establishment.hospital ? 'Hospital' : 'Hemocentro'}` :
               'Nenhum estabelecimento cadastrado';
           };
-    
+
           const processedData = {
             ...perfil,
             permissoesFormatadas: formatPermissions(perfil.permissoes || []),
             estabelecimentoInfo: formatEstablishment(perfil.estabelecimento)
           };
-    
+
           const fields = [
             { label: 'Nome', value: 'nome' },
             { label: 'Estabelecimento', value: 'estabelecimentoInfo' },
@@ -459,7 +526,7 @@ export class HomePageComponent implements OnInit {
               value: `permissoesFormatadas.${controller}`
             }))
           ];
-    
+
           this.setDialogConfig(
             'Detalhes do Perfil',
             fields,
@@ -471,7 +538,7 @@ export class HomePageComponent implements OnInit {
         }
       });
     }
-    
+
   }
 
   private setDialogConfig(title: string, fields: any[], data: any) {
@@ -486,7 +553,7 @@ export class HomePageComponent implements OnInit {
   }
 
   private getComponentsList(bolsas: any[]): string {
-    return bolsas.map(b => 
+    return bolsas.map(b =>
       `${b.hemocomponente} (Quantidade: ${b.qtdRequirida}, Tipo Sanguíneo: ${b.abo}${b.rh})`
     ).join(', ');
   }
@@ -499,7 +566,7 @@ export class HomePageComponent implements OnInit {
         { field: 'quantity', header: 'Quantidade' },
         { field: 'status', header: 'Situação' },
         { field: 'expiration', header: 'Vencimento' },
-        { field: 'actions', header: 'Ações' } 
+        { field: 'actions', header: 'Ações' }
       ];
     }
     else if (dataType === 'requisicoes') {
@@ -530,7 +597,7 @@ export class HomePageComponent implements OnInit {
       ];
     }
   }
-  
+
 
 }
 

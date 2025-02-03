@@ -1,13 +1,12 @@
 <section class="register-user-page">
     <div class="register-user-container">
       <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
-      <h1>Boas-vindas à <span>VitaeSangue!</span></h1>
       <h2>Formulário de Edicao de Usuário</h2>
       <h3>Insira as informações requeridas abaixo</h3>
-  
+
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
-  
+
           <div class="p-field">
             <label for="nome">Nome</label>
             <input pInputText id="nome" formControlName="nome" />
@@ -15,7 +14,7 @@
               Nome é obrigatório e deve ter no mínimo 3 caracteres
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="cpf">CPF</label>
             <p-inputMask mask="999.999.999-99" formControlName="cpf" placeholder="000.000.000-00" [autoClear]="false"/>
@@ -23,7 +22,7 @@
               CPF inválido. Use o formato: 000.000.000-00
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="email">E-mail</label>
             <input pInputText id="email" formControlName="email" type="email" placeholder="seuemail@email.com" />
@@ -39,7 +38,7 @@
               CEP inválido. Use o formato: 99999-999
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="logradouro">Logradouro</label>
             <input pInputText id="logradouro" formControlName="logradouro" />
@@ -47,7 +46,7 @@
               Logradouro é obrigatório
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="numero">Numero</label>
             <input pInputText id="numero" formControlName="numero" />
@@ -55,7 +54,7 @@
               Numero é obrigatório
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="bairro">Bairro</label>
             <input pInputText id="bairro" formControlName="bairro" />
@@ -63,7 +62,7 @@
               Bairro é obrigatório
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="cidade">Cidade</label>
             <input pInputText id="cidade" formControlName="cidade" />
@@ -71,7 +70,7 @@
               Cidade é obrigatória
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="estado">Estado</label>
             <input pInputText id="estado" formControlName="estado" />
@@ -79,7 +78,7 @@
               Estado é obrigatório (ex: SP)
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="telefone">Telefone</label>
             <input type="hidden" id="telefoneId" formControlName="telefoneId" value=>
@@ -88,43 +87,42 @@
               Telefone inválido. Use o formato: (99) 99999-9999
             </small>
           </div>
-  
+
           <div class="p-field">
             <label for="perfil">Perfil</label>
             <p-dropdown id="perfil"  formControlName="perfil" [options]="profiles"  optionLabel="nome" optionValue="id" placeholder="Selecione o perfil" [showClear]="true" >
-  
+
               <ng-template pTemplate="empty">
                 Nenhum perfil disponível
               </ng-template>
-  
+
             </p-dropdown>
             <small class="p-error" *ngIf="registerForm.get('perfil')?.invalid && registerForm.get('perfil')?.touched">
               Perfil é obrigatório
             </small>
           </div>
-  
+
           <div class="p-field" *ngIf="shouldShowEstabelecimento">
             <label for="estabelecimento">Estabelecimento</label>
             <p-dropdown id="estabelecimento" formControlName="estabelecimento" [options]="establishments"
               optionLabel="nome" placeholder="Selecione o tipo" [showClear]="true">
-  
+
               <ng-template pTemplate="empty">
                 Nenhum estabelecimento encontrado
               </ng-template>
-  
+
             </p-dropdown>
             <small class="p-error" *ngIf="registerForm.get('estabelecimento')?.invalid && registerForm.get('estabelecimento')?.touched">
               O estabelecimento é obrigatório.
             </small>
           </div>
-  
+
         </div>
-  
+
         <div class="button-container">
-          <button pButton type="button" label="Voltar" (click)="onSubmit()" routerLink="/login">Voltar</button>
+          <button pButton type="button" label="Voltar" (click)="onBack()" routerLink="/login">Voltar</button>
           <button pButton type="submit" label="Registre-se">Registre-se</button>
         </div>
       </form>
     </div>
   </section>
-  

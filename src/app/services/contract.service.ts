@@ -24,6 +24,14 @@ export class ContractService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
+  approveContract(id: number) {
+    return this.http.put(`${this.apiUrl}/${id}/aprovar`, null);
+  }
+
+  denyContract(id: number) {
+    return this.http.put(`${this.apiUrl}/${id}/rejeitar`, null);
+  }
+
   createContrato(dadosContrato: any) {
     return this.http.post(this.apiUrl, dadosContrato);
   }

@@ -43,7 +43,7 @@ export class UserService {
         name: response.nome || 'Usuário',
         email: response.email,
         isAdmin: response.isAdmin,
-        establishment: response.estabelecimento?.nome || 'Estabelecimento não definido',
+        establishment: response.estabelecimento || 'Estabelecimento não definido',
         nameFirstLetter: (response.nome?.[0] || 'U').toUpperCase()
       }))
     );

@@ -34,20 +34,26 @@
                                 {{ rowData[col.field] || 'Pendente' }}
                             </span>
                         </ng-container>
-                        
-                        <!-- Actions column -->
                         <ng-container *ngSwitchCase="'actions'">
-                            <div class="flex gap-2">
-                                <a *ngFor="let action of rowData.actions"
-                                   [routerLink]="action.link"
-                                   pButton
-                                   [ngClass]="action.styleClass"
-                                   class="p-button-sm">
-                                    {{ action.label }}
-                                </a>
-                            </div>
+                          <div class="flex gap-2">
+                            <ng-container *ngFor="let action of rowData.actions">
+                              <a *ngIf="action.link"
+                                 [routerLink]="[action.link]"
+                                 pButton
+                                 [ngClass]="action.styleClass"
+                                 class="p-button-sm">
+                                {{ action.label }}
+                              </a>
+                              <button *ngIf="!action.link"
+                                      pButton
+                                      [ngClass]="action.styleClass"
+                                      class="p-button-sm"
+                                      (click)="action.onClick()">
+                                {{ action.label }}
+                              </button>
+                            </ng-container>
+                          </div>
                         </ng-container>
-                        
                         <!-- Default column -->
                         <ng-container *ngSwitchDefault>
                             {{ rowData[col.field] || '-' }}
@@ -55,8 +61,8 @@
                     </ng-container>
                 </td>
                 <td>
-                    <button pButton 
-                            icon="pi pi-eye" 
+                    <button pButton
+                            icon="pi pi-eye"
                             class="p-button-rounded p-button-info"
                             (click)="showDetails(rowData)"
                             [disabled]="!rowData.id">

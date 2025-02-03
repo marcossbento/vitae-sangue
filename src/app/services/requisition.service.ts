@@ -16,7 +16,7 @@ export class RequisitionService {
       .set('size', size.toString())
       .set('page', page.toString())
       .set('expt', '')
-      .set('id', ''); 
+      .set('id', '');
 
     return this.http.get(this.apiUrl, { params });
   }
@@ -32,5 +32,13 @@ export class RequisitionService {
 
   createRequisicao(dadosRequisicao: any) {
     return this.http.post(this.apiUrl, dadosRequisicao);
+  }
+
+  approveRequisicao(id: number) {
+    return this.http.put(`${this.apiUrl}/${id}/aprovar`, null);
+  }
+
+  denyRequisicao(id: number) {
+    return this.http.put(`${this.apiUrl}/${id}/rejeitar`, null);
   }
 }

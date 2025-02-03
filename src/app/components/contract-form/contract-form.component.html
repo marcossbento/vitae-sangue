@@ -72,6 +72,7 @@
           <button pButton [label]="currentStep === steps.length - 1 ? 'Finalizar' : 'Confirmar e avançar'"
             class="p-button-danger" (click)="nextStep()" [disabled]="!isStepValid(currentStep)">
           </button>
+
         </div>
       </form>
     </div>

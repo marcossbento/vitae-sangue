@@ -12,12 +12,15 @@ import { HemocentroService } from '../../services/hemocentro.service';
 import { catchError, of } from 'rxjs';
 import { MessagesModule } from 'primeng/messages';
 import { ContractService } from '../../services/contract.service';
+import { Router, RouterModule } from '@angular/router';
+
 
 
 @Component({
   selector: 'app-contract-form',
   standalone: true,
   imports: [
+    RouterModule,
     CommonModule,
     ReactiveFormsModule,
     StepperModule,
@@ -37,13 +40,13 @@ export class ContractFormComponent implements OnInit{
   currentStep: number = 0;
   hemocentros: any[] = [];
   selectedHemocentro: any;
-  
+
   steps = [
     { label: 'Hemocentro requerido', icon: 'pi pi-home', completed: false, formGroupName: 'dadosRequeridos' },
     { label: 'Datas e quantidade', icon: 'pi pi-file', completed: false, formGroupName: 'dataQuantidade' }
   ];
-  
-  constructor(private fb: FormBuilder, private hemocentroService: HemocentroService, private contractService: ContractService, private messageService: MessagesModule) { 
+
+  constructor(private fb: FormBuilder, private hemocentroService: HemocentroService, private contractService: ContractService, private messageService: MessagesModule,  private router: Router ) {
     this.formGroup = this.fb.group({
       dadosRequeridos: this.fb.group({
         hemocentro: ['', Validators.required]
@@ -65,7 +68,7 @@ export class ContractFormComponent implements OnInit{
       const group = control as FormGroup;
       const startDate = group.get('dataInicio')?.value;
       const endDate = group.get('dataVencimento')?.value;
-  
+
       if (startDate && endDate && startDate > endDate) {
         return { dateRange: true }; // Retorna um erro se a data de início for posterior
       }
@@ -76,7 +79,7 @@ export class ContractFormComponent implements OnInit{
   carregarHemocentros(): void {
     this.hemocentroService.getHemocentros().subscribe({
       next: (response) => {
-        this.hemocentros = response.content || []; 
+        this.hemocentros = response.content || [];
       },
       error: (err) => console.error('Erro ao carregar:', err)
     });
@@ -118,10 +121,10 @@ export class ContractFormComponent implements OnInit{
 
   nextStep() {
     const currentStepGroup = this.formGroup.get(this.steps[this.currentStep].formGroupName);
-    
+
     if (currentStepGroup?.valid) {
       if (this.currentStep === this.steps.length - 1) {
-        this.submitContract(); // Chama o método de envio no último passo
+        this.submitContract(); // Chaapma o método de envio no último passo
       } else {
         this.steps[this.currentStep].completed = true;
         this.currentStep++;
@@ -137,8 +140,8 @@ export class ContractFormComponent implements OnInit{
 
   goToStep(index: number) {
     // Só permite navegar para steps já completados ou o próximo
-    if (index < this.currentStep || 
-        index === this.currentStep || 
+    if (index < this.currentStep ||
+        index === this.currentStep ||
         (index === this.currentStep + 1 && this.steps[this.currentStep].completed)) {
       this.currentStep = index;
     }
@@ -148,5 +151,6 @@ export class ContractFormComponent implements OnInit{
     const stepGroup = this.formGroup.get(this.steps[stepIndex].formGroupName);
     return stepGroup?.valid || false;
   }
+
 
 }

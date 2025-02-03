@@ -10,18 +10,20 @@ import { EditProfilePageComponent } from './components/edit-profile-page/edit-pr
 import { RequisitionFormComponent } from './components/requisition-form/requisition-form.component';
 import { EditUserPageComponent } from './components/edit-user-page/edit-user-page.component';
 import { ResetPasswordUserPageComponent } from './components/reset-password-user-page/reset-password-user-page.component';
+import { AuthGuard } from './auth.guard';  // Ajuste o caminho conforme necessário
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
-  { path: 'user/create', component: RegisterUserPageComponent },
-  { path: 'user/edit/:id', component: EditUserPageComponent },
-  { path: 'user/:id/reset-password', component: ResetPasswordUserPageComponent },
-  { path: 'profile/create', component: RegisterProfilePageComponent },
-  { path: 'profile/edit/:id', component: EditProfilePageComponent },
-  { path: 'home', component: HomePageComponent },
-  { path: 'form/contract', component: ContractFormComponent },
-  { path: 'form/requisition', component: RequisitionFormComponent },
+  { path: 'user/create', component: RegisterUserPageComponent},
+  { path: 'user/edit/:id', component: EditUserPageComponent,canActivate: [AuthGuard] },
+  { path: 'user/:id/reset-password', component: ResetPasswordUserPageComponent,canActivate: [AuthGuard] },
+  { path: 'profile/create', component: RegisterProfilePageComponent,canActivate: [AuthGuard] },
+  { path: 'profile/edit/:id', component: EditProfilePageComponent,canActivate: [AuthGuard] },
+  { path: 'home', component: HomePageComponent,canActivate: [AuthGuard]},
+  { path: 'form/contract', component: ContractFormComponent,canActivate: [AuthGuard] },
+  { path: 'form/requisition', component: RequisitionFormComponent,canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
 

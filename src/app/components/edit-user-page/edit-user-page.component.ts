@@ -65,7 +65,7 @@ export class EditUserPageComponent {
       cidade: ['', Validators.required],
       estado: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
-      telefoneId: [null], 
+      telefoneId: [null],
       perfil: ['', Validators.required], // Perfil do usuário
       estabelecimento: ['', Validators.required], // Estabelecimento do usuário
     });
@@ -75,14 +75,14 @@ export class EditUserPageComponent {
     this.userAuthenticatedService.getPermissionResource("USUARIO").subscribe(
       (response) => {
         if (!response[0] || !response[0].atualizacao) {
-          this.router.navigate(['home']); 
+          this.router.navigate(['home']);
         }
-  
+
         this.initForm();
       },
       (error) => {
         console.error('Erro ao carregar permissões:', error);
-        this.router.navigate(['home']); 
+        this.router.navigate(['home']);
       }
     );
   }
@@ -104,7 +104,7 @@ export class EditUserPageComponent {
         if (user) {
           this.registerForm.patchValue({
             nome: user.nome,
-            cpf: this.formatCpf(user.cpf), 
+            cpf: this.formatCpf(user.cpf),
             email: user.email,
             cep: user.endereco.cep,
             logradouro: user.endereco.logradouro,
@@ -112,13 +112,13 @@ export class EditUserPageComponent {
             bairro: user.endereco.bairro,
             cidade: user.endereco.cidade,
             estado: user.endereco.estado,
-            telefone: this.formatTelefone(user.telefones[0].ddd, user.telefones[0].numero), 
+            telefone: this.formatTelefone(user.telefones[0].ddd, user.telefones[0].numero),
             telefoneId: user.telefones[0].id || null,
             perfil: user.perfil.id,
             estabelecimento: user.estabelecimento || null,
           });
         }
-  
+
         console.log(user);
       },
       (error) => {
@@ -129,19 +129,19 @@ export class EditUserPageComponent {
 
   private formatTelefone(ddd: string | number, numero: string | number): string {
     const telefoneNumerico = numero.toString().replace(/\D/g, '');
-    
+
     if (telefoneNumerico.length === 9) {
       return `(${ddd}) ${telefoneNumerico.slice(0, 5)}-${telefoneNumerico.slice(5)}`;
     } else {
       return `(${ddd}) ${telefoneNumerico.slice(0, 4)}-${telefoneNumerico.slice(4)}`;
     }
   }
-  
+
 
   private formatCpf(cpf: string): string {
     return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
   }
-  
+
 
   private loadProfiles(): void {
     this.profileService.getProfiles().subscribe({
@@ -178,12 +178,14 @@ export class EditUserPageComponent {
       this.loadEstablishments();
     }
 
-   
+
     if (this.userId) {
       this.loadUser(this.userId);
     }
   }
-
+  onBack(): void {
+    this.router.navigate(['home']);
+  }
   onSubmit(): void {
     console.log('Formulário enviado:', this.registerForm.value);
     if (this.registerForm.valid) {
@@ -205,10 +207,10 @@ export class EditUserPageComponent {
           id: this.registerForm.get('telefoneId')?.value,
           ddd: parseInt(this.registerForm.get('telefone')?.value.slice(1, 3), 10),
           numero: parseInt(this.registerForm.get('telefone')?.value.replace(/\D/g, '').slice(2), 10),
-          descricao: 'Contato de usuario', 
+          descricao: 'Contato de usuario',
           whatsapp: true
         }],
-        perfilId: this.registerForm.get('perfil')?.value, 
+        perfilId: this.registerForm.get('perfil')?.value,
         estabelecimentoId: this.shouldShowEstabelecimento ? this.registerForm.get('estabelecimento')?.value.id : 0
       };
       console.log(requestBody);
