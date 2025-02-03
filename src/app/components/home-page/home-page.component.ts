@@ -67,7 +67,9 @@ export class HomePageComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    this.user = await this.userAuthenticatedService.getUserLogado()
+
     this.userAuthenticatedService.getPermissionResource("CONTRATO").subscribe(
       (response) => {
         if (response && response.length > 0) {
@@ -80,7 +82,8 @@ export class HomePageComponent implements OnInit {
               pPhrase: ' contratos',
               image: '../../assets/images/contratos.webp',
               link: '/form/contract',
-              permissionCreate: this.contratoPermisions.criacao
+              permissionCreate: this.contratoPermisions.criacao,
+              hospital: this.user.estabelecimento.hospital
             });
 
             if(!this.tabelaCarregada){
@@ -107,7 +110,8 @@ export class HomePageComponent implements OnInit {
               pPhrase: 'requisições de bolsa',
               image: '../../assets/images/bolsasDeSangue.webp',
               link: '/form/requisition',
-              permissionCreate: this.requisicaoPermisions.criacao
+              permissionCreate: this.requisicaoPermisions.criacao,
+              hospital: this.user.estabelecimento.hospital
             });
 
             if(!this.tabelaCarregada){
@@ -134,7 +138,8 @@ export class HomePageComponent implements OnInit {
               pPhrase: 'os usuários',
               image: '../../assets/images/bolsasDeSangue.webp',
               link: '/user/create',
-              permissionCreate: this.userPermisions.criacao
+              permissionCreate: this.userPermisions.criacao,
+              hospital: this.user.estabelecimento.hospital
             });
 
             if(!this.tabelaCarregada){
@@ -162,7 +167,8 @@ export class HomePageComponent implements OnInit {
               pPhrase: 'os perfis',
               image: '../../assets/images/bolsasDeSangue.webp',
               link: '/profile/create',
-              permissionCreate: this.profilePermisions.criacao
+              permissionCreate: this.profilePermisions.criacao,
+              hospital: this.user.estabelecimento.hospital
             });
 
             if(!this.tabelaCarregada){
@@ -177,7 +183,6 @@ export class HomePageComponent implements OnInit {
       }
     );
 
-    this.loadUserData();
   }
 
   private loadUserData(): void {
@@ -216,7 +221,7 @@ export class HomePageComponent implements OnInit {
         this.tableData = response.content.map((contract: any) => {
           let actions: any = [];
 
-          if (this.contratoPermisions.atualizacao && contract.situacao === 'PENDENTE' && !this.user.establishment.hospital) {
+          if (this.contratoPermisions.atualizacao && contract.situacao === 'PENDENTE' && !this.user.estabelecimento.hospital) {
             actions = [
               {
                 label: 'Aprovar',
@@ -277,7 +282,7 @@ export class HomePageComponent implements OnInit {
           let actions: any = [];
 
 
-            if (this.requisicaoPermisions.atualizacao && requisicao.situacao === 'PENDENTE' && !this.user.establishment.hospital) {
+            if (this.requisicaoPermisions.atualizacao && requisicao.situacao === 'PENDENTE' && !this.user.estabelecimento.hospital) {
               actions = [
                 {
                   label: 'Aprovar',
