@@ -103,7 +103,7 @@ export class HomePageComponent implements OnInit {
           if (this.requisicaoPermisions.visualizacao) {
             this.cardItems.push({
               title: 'Requisições de bolsas',
-              createButtonTitle: ' a requisição de bolsa',
+              createButtonTitle: 'a requisição de bolsa',
               pPhrase: 'as requisições de bolsa',
               image: '../../assets/images/bolsasDeSangue.webp',
               link: '/form/requisition',
@@ -129,9 +129,9 @@ export class HomePageComponent implements OnInit {
 
           if (this.userPermisions.visualizacao) {
             this.cardItems.push({
-              title: 'Usuarios',
-              createButtonTitle: ' usuario',
-              pPhrase: 'os usuario',
+              title: 'Usuários',
+              createButtonTitle: ' usuário',
+              pPhrase: 'os usuários',
               image: '../../assets/images/bolsasDeSangue.webp',
               link: '/user/create',
               permissionCreate: this.userPermisions.criacao
@@ -139,7 +139,7 @@ export class HomePageComponent implements OnInit {
 
             if(!this.tabelaCarregada){
               this.tabelaCarregada = true;
-              this.onCardClick("Usuarios")
+              this.onCardClick("Usuários")
             }
           }
         }
@@ -201,7 +201,7 @@ export class HomePageComponent implements OnInit {
       case 'Requisições de bolsas':
         this.loadRequisicoes();
         break;
-      case 'Usuarios':
+      case 'Usuários':
         this.loadUsuarios();
         break;
       case 'Perfis':
@@ -225,7 +225,6 @@ export class HomePageComponent implements OnInit {
                   this.contractService.approveContract(contract.id).subscribe({
                     next: (response) => {
                       console.log('Contrato aprovado com sucesso', response);
-                      // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
                       this.loadContracts();
                     },
                     error: (err) => {
@@ -241,8 +240,7 @@ export class HomePageComponent implements OnInit {
                 onClick: () => {
                   this.contractService.denyContract(contract.id).subscribe({
                     next: (response) => {
-                      console.log('Contro negado', response);
-                      // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
+                      console.log('Contrato negado', response);
                       this.loadContracts();
                     },
                     error: (err) => {
@@ -287,8 +285,7 @@ export class HomePageComponent implements OnInit {
                   onClick: () => {
                     this.requisitionService.approveRequisicao(requisicao.id).subscribe({
                       next: (response) => {
-                        console.log('Requisição aprovado com sucesso', response);
-                        // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
+                        console.log('Requisição aprovada com sucesso', response);
                         this.loadRequisicoes();
                       },
                       error: (err) => {
@@ -304,8 +301,7 @@ export class HomePageComponent implements OnInit {
                   onClick: () => {
                     this.requisitionService.denyRequisicao(requisicao.id).subscribe({
                       next: (response) => {
-                        console.log('Requisição negado', response);
-                        // Atualizar a lista de contratos ou fazer outro tipo de ação após aprovação
+                        console.log('Requisição negada', response);
                         this.loadRequisicoes();
                       },
                       error: (err) => {
@@ -415,7 +411,6 @@ export class HomePageComponent implements OnInit {
     } else if (this.selectedCard === 'Requisições de bolsas') {
       this.requisitionService.getRequisitionById(rowData.id).subscribe({
         next: (requisition) => {
-          // Calcula campos dinamicamente a partir dos dados da API
           const processedData = {
             ...requisition,
             quantidade: this.calculateTotalBags(requisition.bolsas || []),
@@ -472,7 +467,6 @@ export class HomePageComponent implements OnInit {
           this.setDialogConfig(
             'Detalhes do Usuário',
             [
-              // Informações Pessoais
               { label: 'Nome', value: 'nome' },
               { label: 'CPF', value: 'cpf' },
               { label: 'E-mail', value: 'email' },

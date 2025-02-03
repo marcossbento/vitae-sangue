@@ -60,7 +60,7 @@ export class ContractFormComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.carregarHemocentros(); // Carrega hemocentros ao inicializar
+    this.carregarHemocentros();
   }
 
   private createDateValidator(): ValidatorFn {
@@ -70,9 +70,9 @@ export class ContractFormComponent implements OnInit{
       const endDate = group.get('dataVencimento')?.value;
 
       if (startDate && endDate && startDate > endDate) {
-        return { dateRange: true }; // Retorna um erro se a data de início for posterior
+        return { dateRange: true };
       }
-      return null; // Válido
+      return null;
     };
   }
 
@@ -99,7 +99,7 @@ export class ContractFormComponent implements OnInit{
     this.contractService.createContrato(payload).subscribe({
       next: (response) => {
         console.log('Contrato criado com sucesso:', response);
-        alert('Contrato salvo com sucesso!'); // Feedback simples
+        alert('Contrato salvo com sucesso!');
         this.resetForm();
       },
       error: (error) => {
@@ -124,7 +124,7 @@ export class ContractFormComponent implements OnInit{
 
     if (currentStepGroup?.valid) {
       if (this.currentStep === this.steps.length - 1) {
-        this.submitContract(); // Chaapma o método de envio no último passo
+        this.submitContract();
       } else {
         this.steps[this.currentStep].completed = true;
         this.currentStep++;
@@ -139,7 +139,6 @@ export class ContractFormComponent implements OnInit{
   }
 
   goToStep(index: number) {
-    // Só permite navegar para steps já completados ou o próximo
     if (index < this.currentStep ||
         index === this.currentStep ||
         (index === this.currentStep + 1 && this.steps[this.currentStep].completed)) {

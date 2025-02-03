@@ -105,7 +105,7 @@ export class RequisitionFormComponent implements OnInit {
     this.currentStep = 0;
     this.steps.forEach(step => step.completed = false);
     this.bolsas.clear();
-    this.addBolsa(); // Adiciona uma bolsa inicial após resetar o formulário
+    this.addBolsa();
   }
 
   nextStep() {
@@ -113,7 +113,7 @@ export class RequisitionFormComponent implements OnInit {
 
     if (currentStepGroup?.valid) {
       if (this.currentStep === this.steps.length - 1) {
-        this.submitRequisition(); // Chama o método de envio no último passo
+        this.submitRequisition();
       } else {
         this.steps[this.currentStep].completed = true;
         this.currentStep++;

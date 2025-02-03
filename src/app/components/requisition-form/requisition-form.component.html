@@ -1,6 +1,5 @@
 <div class="form-container">
   <div class="grid">
-    <!-- Navegação Lateral -->
     <div class="step-navigation">
       <div class="logo">
         <img src="../../../assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue">
@@ -22,7 +21,6 @@
       <h2>{{ steps[currentStep].label }}</h2>
     
       <form [formGroup]="formGroup">
-        <!-- Seleção do Hemocentro -->
         @if (currentStep === 0) {
           <div formGroupName="dadosHemocentro" class="form-fields">
             <div class="p-field">
@@ -38,7 +36,6 @@
           </div>
         }
     
-        <!-- Detalhes da Requisição -->
         @if (currentStep === 1) {
           <div formGroupName="dadosRequisicao" class="form-fields">
             <div formArrayName="bolsas">

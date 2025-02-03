@@ -66,8 +66,8 @@ export class EditUserPageComponent {
       estado: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
       telefoneId: [null],
-      perfil: ['', Validators.required], // Perfil do usuário
-      estabelecimento: ['', Validators.required], // Estabelecimento do usuário
+      perfil: ['', Validators.required],
+      estabelecimento: ['', Validators.required],
     });
   }
 
@@ -189,7 +189,6 @@ export class EditUserPageComponent {
   onSubmit(): void {
     console.log('Formulário enviado:', this.registerForm.value);
     if (this.registerForm.valid) {
-      // Mapear os campos do formulário para o formato da requisição
       const requestBody = {
         id: this.userId,
         nome: this.registerForm.get('nome')?.value,
@@ -215,7 +214,6 @@ export class EditUserPageComponent {
       };
       console.log(requestBody);
 
-      // Enviar o corpo da requisição ao serviço
       this.userService.updateUser(requestBody).subscribe(
         (response) => {
           console.log('Registro realizado com sucesso:', response);

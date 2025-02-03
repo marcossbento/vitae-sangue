@@ -1,6 +1,5 @@
 <div class="form-container">
   <div class="grid">
-    <!-- Navegação Lateral -->
     <div class="step-navigation">
       <div class="logo">
         <img src="../../../assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue">
@@ -18,13 +17,11 @@
       </ul>
     </div>
 
-    <!-- Área do Formulário -->
     <div class="form-content">
       <h2>{{steps[currentStep].label}}</h2>
 
       <form [formGroup]="formGroup">
 
-        <!-- Hospital e Usuário Requeridos -->
         @if (currentStep === 0) {
         <div formGroupName="dadosRequeridos" class="form-fields">
           <div class="p-field">
@@ -41,13 +38,11 @@
         </div>
         }
 
-        <!-- Datas de início e vencimento e quantidade de sangue -->
         @if (currentStep === 1) {
         <div formGroupName="dataQuantidade" class="form-fields">
           <div class="field">
             <label>Data de Início</label>
             <p-calendar formControlName="dataInicio" />
-            <!-- Mensagem de erro -->
             @if (formGroup.get('dataQuantidade')?.hasError('dateRange')) {
             <small class="p-error">A data de início não pode ser posterior à data de vencimento.</small>
             }

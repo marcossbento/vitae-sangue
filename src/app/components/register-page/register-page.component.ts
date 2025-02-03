@@ -50,7 +50,7 @@ export class RegisterPageComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
+    public router: Router,
     private registerService: RegisterService
   ) {
     this.initForm();
@@ -99,7 +99,6 @@ export class RegisterPageComponent {
       this.registerForm.get('tipoHospital')?.disable();
       this.registerForm.get('diretor')?.disable();
   
-      // Limpar valor do campo ao desabilitar
       this.registerForm.get('tipoHospital')?.setValue(null);
     } else {
       this.showCnes = true;
@@ -110,7 +109,6 @@ export class RegisterPageComponent {
       this.registerForm.get('tipoHospital')?.enable();
       this.registerForm.get('diretor')?.enable();
   
-      // Adicionar valor padrão ao habilitar
       if (!this.registerForm.get('tipoHospital')?.value) {
         this.registerForm.get('tipoHospital')?.setValue('PUBLICO');
       }
@@ -157,11 +155,9 @@ export class RegisterPageComponent {
         diretorResponsavel: this.registerForm.get('diretor')?.value,
       };
   
-      // Adicionar campos extras condicionalmente
       if (this.registerForm.get('tipoEstabelecimento')?.value?.value.toUpperCase() === "HOSPITAL") {
         console.log("O tipo de estabelecimento é HOSPITAL, adicionando campos extras...");
   
-        // Garantir que o valor padrão é atribuído a tipoHospital
         if (!this.registerForm.get('tipoHospital')?.value) {
           this.registerForm.get('tipoHospital')?.setValue('PUBLICO');
         }
@@ -170,7 +166,6 @@ export class RegisterPageComponent {
         requestBody.cnes = this.registerForm.get('cnes')?.value;
       }
   
-      // Enviar o corpo da requisição ao serviço
       this.registerService.register(requestBody).subscribe(
         (response) => {
           console.log('Registro realizado com sucesso:', response);

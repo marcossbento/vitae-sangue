@@ -59,7 +59,6 @@ export class ResetPasswordUserPageComponent {
   }
 
   loadUser(userId: string): void {
-    // Simula a busca de dados do usuário por um serviço (substitua pelo seu UserService)
     this.userService.getUser(userId).subscribe(
       (user) => {
         if (user) {
@@ -97,14 +96,12 @@ export class ResetPasswordUserPageComponent {
   onSubmit(): void {
     console.log('Formulário enviado:', this.registerForm.value);
     if (this.registerForm.valid) {
-      // Mapear os campos do formulário para o formato da requisição
       const requestBody = {
         userId: this.userId,
         senha: this.registerForm.get('senha')?.value
       };
       console.log(requestBody);
 
-      // Enviar o corpo da requisição ao serviço
       this.userService.resetPasswordUser(requestBody).subscribe(
         (response) => {
           console.log('Registro alterado com sucesso:', response);

@@ -1,7 +1,7 @@
 <section class="register-user-page">
   <div class="register-user-container">
     <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
-    <h1>Boas-vindas à <span>VitaeSangue!</span></h1>
+    <h1>Gerenciamento de Usuários - <span>VitaeSangue</span></h1>
     <h2>Formulário de Registro de Usuário</h2>
     <h3>Insira as informações requeridas abaixo</h3>
 
@@ -60,7 +60,7 @@
           <label for="numero">Numero</label>
           <input pInputText id="numero" formControlName="numero" />
           <small class="p-error" *ngIf="registerForm.get('numero')?.invalid && registerForm.get('numero')?.touched">
-            Numero é obrigatório
+            Número é obrigatório
           </small>
         </div>
 
@@ -92,7 +92,7 @@
           <label for="telefone">Telefone</label>
           <p-inputMask mask="(99) 99999-9999" formControlName="telefone" placeholder="(99) 99999-9999" [autoClear]="false"/>
           <small class="p-error" *ngIf="registerForm.get('telefone')?.invalid && registerForm.get('telefone')?.touched">
-            Telefone inválido. Use o formato: (99) 99999-9999
+            Telefone inválido - Use o formato: (99) 99999-9999
           </small>
         </div>
 
@@ -121,7 +121,7 @@
 
           </p-dropdown>
           <small class="p-error" *ngIf="registerForm.get('estabelecimento')?.invalid && registerForm.get('estabelecimento')?.touched">
-            O estabelecimento é obrigatório.
+            O estabelecimento é obrigatório
           </small>
         </div>
 

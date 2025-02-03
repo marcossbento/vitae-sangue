@@ -2,7 +2,7 @@
   <div class="register-container">
     <img src="assets/images/iconizer-VitaeSangueLogo.svg" alt="VitaeSangue Logo">
     <h1>Boas-vindas à <span>VitaeSangue!</span></h1>
-    <h2>Formulário de Registro</h2>
+    <h2>Formulário de Solicitação de Acesso</h2>
     <h3>Insira as informações requeridas abaixo</h3>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
@@ -112,8 +112,8 @@
       </div>
 
       <div class="button-container">
-        <button pButton type="button" label="Voltar">Voltar</button>
-        <button pButton type="submit" label="Registre-se" (click)="onSubmit()" routerLink="/login" >Solicitar</button>
+        <button pButton type="button" label="Voltar" [routerLink]="'/login'">Voltar</button>
+        <button pButton type="submit" label="Registre-se" (click)="onSubmit()" routerLink="/login" >Solicitar Acesso</button>
 
       </div>
     </form>
