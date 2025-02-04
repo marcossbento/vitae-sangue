@@ -437,7 +437,7 @@ export class HomePageComponent implements OnInit {
           );
         }
       });
-    } else if (this.selectedCard === 'Usuarios') {
+    } else if (this.selectedCard === 'Usuários') {
       this.userService.getUser(rowData.id).subscribe({
         next: (user) => {
           const formatPhones = (phones: any[]) => {

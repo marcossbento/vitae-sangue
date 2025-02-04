@@ -162,10 +162,11 @@ export class RegisterPageComponent {
           this.registerForm.get('tipoHospital')?.setValue('PUBLICO');
         }
   
-        requestBody.tipoHospital = this.registerForm.get('tipoHospital')?.value;
+        requestBody.tipoHospital = this.registerForm.get('tipoHospital')?.value?.value;
         requestBody.cnes = this.registerForm.get('cnes')?.value;
       }
   
+      console.log(requestBody)
       this.registerService.register(requestBody).subscribe(
         (response) => {
           console.log('Registro realizado com sucesso:', response);

@@ -64,7 +64,7 @@ export class RegisterUserPageComponent {
       estado: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
       perfil: ['', Validators.required], // Perfil do usuário
-      estabelecimento: ['', Validators.required], // Estabelecimento do usuário
+      estabelecimento: ['0'], // Estabelecimento do usuário
     });
   }
 

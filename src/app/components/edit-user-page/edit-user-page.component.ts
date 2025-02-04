@@ -67,7 +67,7 @@ export class EditUserPageComponent {
       telefone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\) \d{5}-\d{4}$/)]],
       telefoneId: [null],
       perfil: ['', Validators.required],
-      estabelecimento: ['', Validators.required],
+      estabelecimento: ['0'],
     });
   }
 
