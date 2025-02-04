@@ -25,7 +25,36 @@
     height: 100vh;
 
     .logo {
-      margin-bottom: 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 1rem;
+    
+      .back-home-btn {
+        position: relative;
+        top: 0;
+        left: 0;
+        background: none;
+        border: 1px solid $primary-color;
+        border-radius: 8px;
+        color: $primary-color;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    
+        i {
+          font-size: 1rem;
+        }
+    
+        &:hover {
+          color: darken($primary-color, 10%);
+          transform: translateX(-5px);
+        }
+      }
 
       img {
         max-width: 200px;

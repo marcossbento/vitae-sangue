@@ -101,6 +101,7 @@ export class ContractFormComponent implements OnInit{
         console.log('Contrato criado com sucesso:', response);
         alert('Contrato salvo com sucesso!');
         this.resetForm();
+        this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('Erro ao salvar contrato:', error);
