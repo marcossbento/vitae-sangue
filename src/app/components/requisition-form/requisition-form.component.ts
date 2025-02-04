@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { HemocentroService } from '../../services/hemocentro.service';
 import { RequisitionService } from '../../services/requisition.service';
 import { UserAuthenticatedService } from '../../services/user-authenticated.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-requisition-form',
@@ -17,7 +18,8 @@ import { UserAuthenticatedService } from '../../services/user-authenticated.serv
     ButtonModule,
     ReactiveFormsModule,
     DropdownModule,
-    InputNumberModule
+    InputNumberModule,
+    RouterModule
   ],
 })
 export class RequisitionFormComponent implements OnInit {
@@ -50,7 +52,8 @@ export class RequisitionFormComponent implements OnInit {
     private fb: FormBuilder,
     private hemocentroService: HemocentroService,
     private requisitionService: RequisitionService,
-    private userAuthenticatedService: UserAuthenticatedService
+    private userAuthenticatedService: UserAuthenticatedService,
+    private router: Router
   ) {
     this.formGroup = this.fb.group({
       dadosHemocentro: this.fb.group({
@@ -154,6 +157,7 @@ export class RequisitionFormComponent implements OnInit {
         console.log('Requisição criada com sucesso:', response);
         alert('Requisição salva com sucesso');
         this.resetForm();
+        this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('Erro ao salvar requisição:', error);
