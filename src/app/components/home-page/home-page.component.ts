@@ -136,7 +136,7 @@ export class HomePageComponent implements OnInit {
               title: 'Usuários',
               createButtonTitle: ' usuário',
               pPhrase: 'os usuários',
-              image: '../../assets/images/bolsasDeSangue.webp',
+              image: '../../assets/images/userImage.webp',
               link: '/user/create',
               permissionCreate: this.userPermisions.criacao,
               hospital: this.user.estabelecimento.hospital
@@ -165,7 +165,7 @@ export class HomePageComponent implements OnInit {
               title: 'Perfis',
               createButtonTitle: ' perfil',
               pPhrase: 'os perfis',
-              image: '../../assets/images/bolsasDeSangue.webp',
+              image: '../../assets/images/userImage.webp',
               link: '/profile/create',
               permissionCreate: this.profilePermisions.criacao,
               hospital: this.user.estabelecimento.hospital
