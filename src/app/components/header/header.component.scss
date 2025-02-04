@@ -36,6 +36,29 @@ $fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
         }
     }
 
+    .profile-container {
+        color: $off-white;
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        
+        &:hover {
+            .dropdown-menu {
+                display: block;
+            }
+        }
+        
+        .p-avatar {
+            margin: 8px;
+            background-color: $off-white;
+
+            span {
+                color: $primary-color;
+            }
+        }
+    }
+
     .profile-area {
         display: flex;
         width: 144px;
@@ -44,25 +67,10 @@ $fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
         transition: all .3s ease;
         padding: 4px;
 
-        &:hover {
-            background-color: $secondary-color;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-
         i {
             color: $off-white;
             font-size: $fs-400;
             margin-right: 5%;
-        }
-
-        p-avatar {
-            height: min-content;
-            margin-right: 5%;
-
-            .p-avatar-circle {
-                background-color: $off-white;
-            }
         }
 
         .profile-area-text {
@@ -77,6 +85,58 @@ $fs-xl: clamp(2rem, 5vw + 1rem, 4rem);
                 font-size: $fs-300;
                 margin: 0;
             }
+        }
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 60%;
+        right: 0;
+        background: darken($primary-color, 5%);
+        border-radius: 8px;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        min-width: 160px;
+        z-index: 1000;
+        display: none;
+        animation: slideDown 0.3s ease-in-out;
+    
+        &:hover {
+            display: block;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            color: $off-white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 6px;
+    
+            i {
+                font-size: 1.1rem;
+            }
+    
+            &:hover {
+                background: rgba(255,255,255,0.1);
+            }
+        }
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 }

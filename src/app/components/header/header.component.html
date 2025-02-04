@@ -3,11 +3,19 @@
         <img src="../../../assets/images/VitaeSangueLogoW.svg" alt="logo">
         <h1>VitaeSangue</h1>
     </div>
-    <div class="profile-area">
+
+    <div class="profile-container" (mouseenter)="showDropdown = true" (mouseleave)="onMouseLeave()">
         <i class="pi pi-angle-down"></i>
         <p-avatar [label]="user.nameFirstLetter" size="large" shape="circle" />
         <div class="profile-area-text">
             <h2>{{ user.name }}</h2>
+        </div>
+
+        <div class="dropdown-menu" *ngIf="showDropdown">
+            <button class="logout-btn" (click)="logout()">
+                <i class="pi pi-sign-out"></i>
+                Sair
+            </button>
         </div>
     </div>
 </header>
